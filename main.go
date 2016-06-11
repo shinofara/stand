@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"github.com/shinofara/stand/cleaner"
+	"github.com/shinofara/stand/compressor"
 	"github.com/shinofara/stand/config"
-	"github.com/shinofara/stand/zip"
 )
 
 type Args struct {
@@ -24,7 +24,7 @@ func main() {
 
 	cfg, _ := config.New(args.ConfigPath)
 
-	err := zip.Compress(cfg)
+	err := compressor.Compress(cfg)
 
 	if err != nil {
 		panic(err)

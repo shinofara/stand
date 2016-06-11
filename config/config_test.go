@@ -9,8 +9,11 @@ func TestNew(t *testing.T) {
 	expected := &Config{
 		TargetDir:  "target",
 		OutputDir:  "output",
-		ZipName:    "name",
 		LifeCyrcle: 12,
+		CompressionConfig: &CompressionConfig{
+			Prefix: "sample",
+			Format: "zip",
+		},
 	}
 
 	cfg, _ := New("./testdata/test.yml")

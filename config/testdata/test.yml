@@ -1,4 +1,6 @@
 target: "target"
 output: "output"
-zip_name: "name"
 life_cycle: 12
+compression:
+  prefix: "sample"
+  format: zip
