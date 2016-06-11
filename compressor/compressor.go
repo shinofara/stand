@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/shinofara/stand/compressor/format"
 	"github.com/shinofara/stand/config"
-	"github.com/shinofara/stand/find"
 	"os"
 	"time"
 )
@@ -34,7 +33,7 @@ func Compress(cfg *config.Config) error {
 
 	output := makeCompressedFileName(cfg)
 
-	files, _ := find.All(cfg.TargetDir)
+	paths, _ := find(cfg.TargetDir)
 
 	//ZIPファイル作成
 	if compressedFile, err = os.Create(output); err != nil {
@@ -42,7 +41,7 @@ func Compress(cfg *config.Config) error {
 	}
 	defer compressedFile.Close()
 
-	if err := compressor.Compress(compressedFile, cfg.TargetDir, files); err != nil {
+	if err := compressor.Compress(compressedFile, cfg.TargetDir, paths); err != nil {
 		return err
 	}
 
