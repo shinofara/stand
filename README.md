@@ -25,8 +25,10 @@ $ stand -conf /path/to/config.yml
 # /path/to/config.yml
 target: "/path/to/target/dir"
 output: "/path/to/output/dir"
-zip_name: "zipfile's prefix"
 life_cycle: 12
+compression:
+  prefix: sample
+  format: zip # or tar
 ```
 
 Unit of `life_cycle` is the number of files .
