@@ -7,18 +7,26 @@ import (
 	"github.com/shinofara/stand/find"
 	"io/ioutil"
 	"os"
+	"time"
+)
+
+const (
+	TIME_FORMAT = "20060102150405"
 )
 
 func Compress(cfg *config.Config) error {
 	var zipfile *os.File
 	var err error
 
-	if err := os.Mkdir(cfg.OutputDir, 0777); err != nil {
-		return err
+	if _, err := os.Stat(cfg.OutputDir); err != nil {
+		if err := os.Mkdir(cfg.OutputDir, 0777); err != nil {
+			return err
+		}
 	}
 
 	// Create a buffer to write our archive to.
-	output := fmt.Sprintf("%s/%s", cfg.OutputDir, cfg.ZipName)
+	timestamp := time.Now().Format(TIME_FORMAT)
+	output := fmt.Sprintf("%s/%s_%s.zip", cfg.OutputDir, cfg.ZipName, timestamp)
 	if zipfile, err = os.Create(output); err != nil {
 		return err
 	}

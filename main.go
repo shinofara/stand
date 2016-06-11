@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"github.com/shinofara/stand/cleaner"
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/zip"
 )
@@ -30,5 +30,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Created %s", cfg.ZipName)
+	if err := cleaner.Exec(cfg); err != nil {
+		panic(err)
+	}
 }

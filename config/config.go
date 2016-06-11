@@ -9,7 +9,7 @@ type Config struct {
 	TargetDir  string `yaml:"target"`     //path to backup target dir
 	OutputDir  string `yaml:"output"`     //path to output dir
 	ZipName    string `yaml:"zip_name"`   //zip name
-	LifeCyrcle int64  `yaml:"life_cycle"` //days
+	LifeCyrcle int64  `yaml:"life_cycle"` //generation management
 }
 
 func New(path string) (*Config, error) {

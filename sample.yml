@@ -1,0 +1,4 @@
+target: "/Users/shinofara/go/src/github.com/shinofara/stand"
+output: "/tmp/backup"
+zip_name: "sample"
+life_cycle: 5
