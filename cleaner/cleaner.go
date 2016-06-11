@@ -16,7 +16,7 @@ func Exec(cfg *config.Config) error {
 	for _, file := range files {
 		if num >= cfg.LifeCyrcle {
 			path := fmt.Sprintf("%s/%s", cfg.OutputDir, file)
-			if err := os.Remove(path); err != nil {
+			if err := os.RemoveAll(path); err != nil {
 				return err
 			}
 		}
