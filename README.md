@@ -1,14 +1,32 @@
 Stand
 ============
 
+[![CircleCI](https://circleci.com/gh/shinofara/stand.svg?style=svg)](https://circleci.com/gh/shinofara/stand)
+
 # Description
 
-Stand is backup and restore tool
+Stand is a tool to perform directory backup and backup's generation management  and restore.
+
+# Installation
+
+```
+$ go install github.com/shinofara/stand
+```
 
 # Usage
 
-## Options
+```
+$ stand -conf /path/to/config.yml
+```
 
-### -d
+# Configration
 
-Target directory path
+```
+# /path/to/config.yml
+target: "/path/to/target/dir"
+output: "/path/to/output/dir"
+zip_name: "zipfile's prefix"
+life_cycle: 12
+```
+
+Unit of `life_cycle` is the number of files .
