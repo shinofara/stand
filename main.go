@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/zip"
 )
 
 type Args struct {
 	Directory string
+	OutputDir string
 	ZipName   string
 }
 
@@ -15,6 +17,7 @@ func main() {
 	var args Args
 
 	flag.StringVar(&args.Directory, "d", "", "-d target directory path")
+	flag.StringVar(&args.OutputDir, "o", "", "-o output path")
 	flag.StringVar(&args.ZipName, "zip", "", "-zip zip name")
 	// コマンドライン引数を解析
 	flag.Parse()
@@ -27,7 +30,17 @@ func main() {
 		panic("-zip is empty")
 	}
 
-	err := zip.Compress(args.Directory, args.ZipName)
+	if args.OutputDir == "" {
+		panic("-o is empty")
+	}
+
+	cfg := &config.Config{
+		TargetDir: args.Directory,
+		OutputDir: args.OutputDir,
+		ZipName:   args.ZipName,
+	}
+
+	err := zip.Compress(cfg)
 
 	if err != nil {
 		panic(err)
