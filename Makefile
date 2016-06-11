@@ -7,3 +7,6 @@ build-mac:
 
 build-linux64:
 	GOOS=linux GOARCH=amd64 go build -o stand_linux_amd64
+
+vet:
+	@go vet $$(glide novendor)

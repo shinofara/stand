@@ -21,7 +21,7 @@ func TestNew(t *testing.T) {
 	actual, _ := New("./testdata/test.yml")
 
 	if !reflect.DeepEqual(expected, actual) {
-		t.Errorf("Must be equal, \ne is %s \na is %s", expected, actual)
+		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
 	}
 }
 
@@ -50,6 +50,6 @@ func TestNewMulti(t *testing.T) {
 	actual, _ := New("./testdata/test_multi.yml")
 
 	if !reflect.DeepEqual(expected, actual) {
-		t.Errorf("Must be equal, \ne is %s \na is %s", expected, actual)
+		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
 	}
 }
