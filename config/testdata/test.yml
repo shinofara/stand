@@ -1,0 +1,4 @@
+target: "target"
+output: "output"
+zip_name: "name"
+life_cycle: 12
