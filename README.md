@@ -30,3 +30,7 @@ life_cycle: 12
 ```
 
 Unit of `life_cycle` is the number of files .
+
+# License
+
+MIT: [LICENSE](LICENSE)
