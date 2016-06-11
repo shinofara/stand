@@ -3,18 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/shinofara/stand/find"
+	"github.com/shinofara/stand/zip"
 )
 
 type Args struct {
 	Directory string
+	ZipName   string
 }
 
 func main() {
 	var args Args
 
-	// -fオプション flag.Arg(0)だとファイル名が展開されてしまうようなので
 	flag.StringVar(&args.Directory, "d", "", "-d target directory path")
+	flag.StringVar(&args.ZipName, "zip", "", "-zip zip name")
 	// コマンドライン引数を解析
 	flag.Parse()
 
@@ -22,9 +23,15 @@ func main() {
 		panic("-d is empty")
 	}
 
-	files, _ := find.All(args.Directory)
-
-	for _, name := range files {
-		fmt.Println(name)
+	if args.ZipName == "" {
+		panic("-zip is empty")
 	}
+
+	err := zip.Compress(args.Directory, args.ZipName)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Created %s", args.ZipName)
 }
