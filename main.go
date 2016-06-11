@@ -22,15 +22,15 @@ func main() {
 		panic("-c is empty")
 	}
 
-	cfg, _ := config.New(args.ConfigPath)
+	cfgs, _ := config.New(args.ConfigPath)
 
-	err := compressor.Compress(cfg)
+	err := compressor.Compress(cfgs)
 
 	if err != nil {
 		panic(err)
 	}
 
-	if err := cleaner.Exec(cfg); err != nil {
+	if err := cleaner.Exec(cfgs); err != nil {
 		panic(err)
 	}
 }

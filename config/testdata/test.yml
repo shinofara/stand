@@ -1,6 +1,6 @@
-target: "target"
-output: "output"
-life_cycle: 12
+target: "/path/to/target/1"
+output: "/path/to/output/1"
+life_cycle: 1
 compression:
-  prefix: "sample"
+  prefix: "prefix1"
   format: zip
