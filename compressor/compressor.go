@@ -12,37 +12,40 @@ const (
 	TIME_FORMAT = "20060102150405"
 )
 
-func Compress(cfg *config.Config) error {
-	var compressedFile *os.File
-	var err error
+func Compress(cfgs *config.Configs) error {
 
-	if err := mkdir(cfg.OutputDir); err != nil {
-		return err
-	}
+	for _, cfg := range *cfgs {
+		var compressedFile *os.File
+		var err error
 
-	var compressor format.Compressor
+		if err := mkdir(cfg.OutputDir); err != nil {
+			return err
+		}
 
-	switch cfg.CompressionConfig.Format {
-	case "zip":
-		compressor = format.NewZipCompressor()
-	case "tar":
-		compressor = format.NewTarCompressor()
-	default:
-		return fmt.Errorf("Not exists compression format")
-	}
+		var compressor format.Compressor
 
-	output := makeCompressedFileName(cfg)
+		switch cfg.CompressionConfig.Format {
+		case "zip":
+			compressor = format.NewZipCompressor()
+		case "tar":
+			compressor = format.NewTarCompressor()
+		default:
+			return fmt.Errorf("Not exists compression format")
+		}
 
-	paths, _ := find(cfg.TargetDir)
+		output := makeCompressedFileName(cfg)
 
-	//ZIPファイル作成
-	if compressedFile, err = os.Create(output); err != nil {
-		return err
-	}
-	defer compressedFile.Close()
+		paths, _ := find(cfg.TargetDir)
 
-	if err := compressor.Compress(compressedFile, cfg.TargetDir, paths); err != nil {
-		return err
+		//ZIPファイル作成
+		if compressedFile, err = os.Create(output); err != nil {
+			return err
+		}
+		defer compressedFile.Close()
+
+		if err := compressor.Compress(compressedFile, cfg.TargetDir, paths); err != nil {
+			return err
+		}
 	}
 
 	return nil
