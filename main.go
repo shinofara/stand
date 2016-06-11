@@ -8,37 +8,21 @@ import (
 )
 
 type Args struct {
-	Directory string
-	OutputDir string
-	ZipName   string
+	ConfigPath string
 }
 
 func main() {
 	var args Args
 
-	flag.StringVar(&args.Directory, "d", "", "-d target directory path")
-	flag.StringVar(&args.OutputDir, "o", "", "-o output path")
-	flag.StringVar(&args.ZipName, "zip", "", "-zip zip name")
+	flag.StringVar(&args.ConfigPath, "conf", "", "-c path to config yaml")
 	// コマンドライン引数を解析
 	flag.Parse()
 
-	if args.Directory == "" {
-		panic("-d is empty")
+	if args.ConfigPath == "" {
+		panic("-c is empty")
 	}
 
-	if args.ZipName == "" {
-		panic("-zip is empty")
-	}
-
-	if args.OutputDir == "" {
-		panic("-o is empty")
-	}
-
-	cfg := &config.Config{
-		TargetDir: args.Directory,
-		OutputDir: args.OutputDir,
-		ZipName:   args.ZipName,
-	}
+	cfg, _ := config.New(args.ConfigPath)
 
 	err := zip.Compress(cfg)
 
@@ -46,5 +30,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Created %s", args.ZipName)
+	fmt.Printf("Created %s", cfg.ZipName)
 }

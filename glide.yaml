@@ -1,0 +1,3 @@
+package: github.com/shinofara/stand
+import:
+- package: gopkg.in/yaml.v2
