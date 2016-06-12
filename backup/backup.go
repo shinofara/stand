@@ -3,6 +3,7 @@ package backup
 import (
 	"github.com/shinofara/stand/backup/location"
 	"github.com/shinofara/stand/config"
+	"path"
 )
 
 type Backup struct {
@@ -11,6 +12,7 @@ type Backup struct {
 
 func (b *Backup) Exec(file string) error {
 	var loc location.Location
+	dir, filename := path.Split(file)
 
 	switch b.Config.StorageConfig.Type {
 	case "s3":
@@ -19,7 +21,7 @@ func (b *Backup) Exec(file string) error {
 		loc = &location.Local{Config: b.Config}
 	}
 
-	if err := loc.Save(file); err != nil {
+	if err := loc.Save(dir, filename); err != nil {
 		return err
 	}
 
