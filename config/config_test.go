@@ -53,3 +53,30 @@ func TestNewMulti(t *testing.T) {
 		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
 	}
 }
+
+func TestNewS3(t *testing.T) {
+	expected := &Configs{
+		&Config{
+			TargetDir:  "/path/to/target/1",
+			Location:   "s3",
+			OutputDir:  "/path/to/output/1",
+			LifeCyrcle: 1,
+			CompressionConfig: &CompressionConfig{
+				Prefix: "prefix1",
+				Format: "zip",
+			},
+			S3Config: &S3Config{
+				AccessKeyID:     "ACCESSKEY",
+				SecretAccessKey: "SECRETKEY",
+				Region:          "ap-northeast-1",
+				BucketName:      "sample",
+			},
+		},
+	}
+
+	actual, _ := New("./testdata/test_s3.yml")
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
+	}
+}
