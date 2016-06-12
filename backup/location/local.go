@@ -12,12 +12,12 @@ type Local struct {
 	Config *config.Config
 }
 
-func (l *Local) Save(file string) error {
+func (l *Local) Save(localDir string, filename string) error {
 	if err := mkdir(l.Config.StorageConfig.Path); err != nil {
 		return err
 	}
 
-	if err := os.Rename("/tmp/"+file, l.Config.StorageConfig.Path+"/"+file); err != nil {
+	if err := os.Rename(localDir+"/"+filename, l.Config.StorageConfig.Path+"/"+filename); err != nil {
 		return err
 	}
 

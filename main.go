@@ -25,15 +25,23 @@ func main() {
 	cfgs, _ := config.New(args.ConfigPath)
 
 	for _, cfg := range *cfgs {
-		output, err := compressor.Compress(cfg)
+		var uploadFileName string
+		var err error
 
-		if err != nil {
-			panic(err)
+		switch cfg.Type {
+		case "dir":
+			uploadFileName, err = compressor.Compress(cfg)
+			if err != nil {
+				panic(err)
+			}
+		case "file":
+			uploadFileName = cfg.Path
+		default:
+			panic("upload target type is not found")
 		}
 
 		b := &backup.Backup{Config: cfg}
-
-		if err := b.Exec(output); err != nil {
+		if err := b.Exec(uploadFileName); err != nil {
 			panic(err)
 		}
 	}

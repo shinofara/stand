@@ -37,8 +37,8 @@ func NewS3(cfg *config.Config) *S3 {
 	return s
 }
 
-func (s *S3) Save(filename string) error {
-	file, err := os.Open(fmt.Sprintf("/tmp/%s", filename))
+func (s *S3) Save(localDir string, filename string) error {
+	file, err := os.Open(fmt.Sprintf("%s/%s", localDir, filename))
 	if err != nil {
 		return err
 	}

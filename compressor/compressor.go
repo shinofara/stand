@@ -32,7 +32,7 @@ func Compress(cfg *config.Config) (string, error) {
 	paths, _ := find(cfg.Path)
 
 	//ZIPファイル作成
-	if compressedFile, err = os.Create("/tmp/" + output); err != nil {
+	if compressedFile, err = os.Create(output); err != nil {
 		return "", err
 	}
 	defer compressedFile.Close()
@@ -57,5 +57,5 @@ func makeCompressedFileName(cfg *config.Config) string {
 		panic("")
 	}
 	output := fmt.Sprintf("%s_%s.%s", cfg.CompressionConfig.Prefix, timestamp, extention)
-	return output
+	return "/tmp/" + output
 }

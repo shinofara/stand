@@ -1,6 +1,6 @@
 package location
 
 type Location interface {
-	Save(string) error
+	Save(string, string) error
 	Clean() error
 }
