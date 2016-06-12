@@ -57,6 +57,22 @@ or
 
 Unit of `life_cycle` is the number of files .
 
+# Policy of release versioning
+
+v `Majors` . `Minors` . `Patches`
+
+### Patches
+
+Patch releases are defined as bug, performance, and security fixes. They do not change or add any public interfaces. They do not change the expected behavior of a given interface. They are meant to correct behavior when it doesn't match the documentation, without also introducing a change that makes seamless upgrades impossible.
+
+### Minors
+
+Minors are the addition and refinements of APIs or subsystems. They do not change APIs or introduce backwards compatible breaking changes. These are mostly completely additive releases.
+
+### Majors
+
+Majors contain changes in behavior that could potentially break code that worked in prior releases.
+
 # Contribution
 
 1. Fork it 
