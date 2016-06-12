@@ -14,7 +14,7 @@ func (b *Backup) Exec(file string) error {
 
 	switch b.Config.Location {
 	case "s3":
-		loc = &location.S3{Config: b.Config}
+		loc = location.NewS3(b.Config)
 	default:
 		loc = &location.Local{Config: b.Config}
 	}
