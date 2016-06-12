@@ -8,9 +8,14 @@ import (
 func TestNew(t *testing.T) {
 	expected := &Configs{
 		&Config{
-			TargetDir:  "/path/to/target/1",
-			OutputDir:  "/path/to/output/1",
-			LifeCyrcle: 1,
+			Type: "dir",
+			Path: "/path/to/target/1",
+			StorageConfig: StorageConfig{
+				Type:       "local",
+				Path:       "/path/to/output/1",
+				LifeCyrcle: 1,
+			},
+
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix1",
 				Format: "zip",
@@ -28,18 +33,26 @@ func TestNew(t *testing.T) {
 func TestNewMulti(t *testing.T) {
 	expected := &Configs{
 		&Config{
-			TargetDir:  "/path/to/target/1",
-			OutputDir:  "/path/to/output/1",
-			LifeCyrcle: 1,
+			Type: "dir",
+			Path: "/path/to/target/1",
+			StorageConfig: StorageConfig{
+				Type:       "local",
+				Path:       "/path/to/output/1",
+				LifeCyrcle: 1,
+			},
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix1",
 				Format: "zip",
 			},
 		},
 		&Config{
-			TargetDir:  "/path/to/target/2",
-			OutputDir:  "/path/to/output/2",
-			LifeCyrcle: 2,
+			Type: "dir",
+			Path: "/path/to/target/2",
+			StorageConfig: StorageConfig{
+				Type:       "local",
+				Path:       "/path/to/output/2",
+				LifeCyrcle: 2,
+			},
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix2",
 				Format: "tar",
@@ -57,19 +70,22 @@ func TestNewMulti(t *testing.T) {
 func TestNewS3(t *testing.T) {
 	expected := &Configs{
 		&Config{
-			TargetDir:  "/path/to/target/1",
-			Location:   "s3",
-			OutputDir:  "/path/to/output/1",
-			LifeCyrcle: 1,
+			Type: "dir",
+			Path: "/path/to/target/1",
+			StorageConfig: StorageConfig{
+				Type:       "s3",
+				Path:       "/path/to/output/1",
+				LifeCyrcle: 1,
+				S3Config: &S3Config{
+					AccessKeyID:     "ACCESSKEY",
+					SecretAccessKey: "SECRETKEY",
+					Region:          "ap-northeast-1",
+					BucketName:      "sample",
+				},
+			},
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix1",
 				Format: "zip",
-			},
-			S3Config: &S3Config{
-				AccessKeyID:     "ACCESSKEY",
-				SecretAccessKey: "SECRETKEY",
-				Region:          "ap-northeast-1",
-				BucketName:      "sample",
 			},
 		},
 	}

@@ -1,6 +1,9 @@
-target: "/path/to/target/1"
-output: "/path/to/output/1"
-life_cycle: 1
+type: dir
+path: "/path/to/target/1"
 compression:
   prefix: "prefix1"
   format: zip
+storage:
+  type: local
+  path: "/path/to/output/1"
+  life_cycle: 1

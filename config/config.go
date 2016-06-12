@@ -8,24 +8,15 @@ import (
 type Configs []*Config
 
 type Config struct {
-	TargetDir         string             `yaml:"target"`     //path to backup target dir
-	Location          string             `yaml:"location"`   //backup location, local or s3
-	OutputDir         string             `yaml:"output"`     //path to output dir
-	LifeCyrcle        int64              `yaml:"life_cycle"` //generation management
+	Type              string             `yaml:"type"` //type of target object
+	Path              string             `yaml:"path"` //path to backup target dir
 	CompressionConfig *CompressionConfig `yaml:"compression"`
-	S3Config          *S3Config          `yaml:"s3"`
+	StorageConfig     StorageConfig      `yaml:"storage"`
 }
 
 type CompressionConfig struct {
 	Prefix string `yaml:"prefix"` // prefix of the compression file name.
 	Format string `yaml:"format"` // format of the compression file.
-}
-
-type S3Config struct {
-	AccessKeyID     string `yaml:"access_key_id"`
-	SecretAccessKey string `yaml:"secret_access_key"`
-	Region          string `yaml:"region"`
-	BucketName      string `yaml:"bucket_name"`
 }
 
 func New(path string) (*Configs, error) {
