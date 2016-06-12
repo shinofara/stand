@@ -8,20 +8,17 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/shinofara/stand/config"
 	"os"
+	"sort"
 )
 
 type S3 struct {
 	Config *config.Config
+	cli    *s3.S3
 }
 
-func (s *S3) Save(filename string) error {
-	file, err := os.Open(fmt.Sprintf("/tmp/%s", filename))
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+func NewS3(cfg *config.Config) *S3 {
 
-	s3Config := s.Config.S3Config
+	s3Config := cfg.S3Config
 	cre := credentials.NewStaticCredentials(
 		s3Config.AccessKeyID,
 		s3Config.SecretAccessKey,
@@ -32,8 +29,23 @@ func (s *S3) Save(filename string) error {
 		Region:      aws.String(s3Config.Region),
 	})
 
-	_, err = cli.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(s3Config.BucketName),
+	s := &S3{
+		Config: cfg,
+		cli:    cli,
+	}
+
+	return s
+}
+
+func (s *S3) Save(filename string) error {
+	file, err := os.Open(fmt.Sprintf("/tmp/%s", filename))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = s.cli.PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(s.Config.S3Config.BucketName),
 		Key:    aws.String(filename),
 		Body:   file,
 	})
@@ -45,5 +57,45 @@ func (s *S3) Save(filename string) error {
 }
 
 func (s *S3) Clean() error {
+	resp, _ := s.findAll()
+
+	var keys []string
+	for _, obj := range resp.Contents {
+		keys = append(keys, *obj.Key)
+	}
+
+	sort.Sort(sort.Reverse(sort.StringSlice(keys)))
+
+	var num int64 = 0
+	for _, key := range keys {
+		if num >= s.Config.LifeCyrcle {
+			// delete
+			if err := s.delete(key); err != nil {
+				return err
+			}
+		}
+
+		num++
+	}
+	return nil
+}
+
+func (s *S3) findAll() (*s3.ListObjectsOutput, error) {
+	return s.cli.ListObjects(&s3.ListObjectsInput{
+		Bucket: aws.String(s.Config.S3Config.BucketName),
+	})
+
+}
+
+func (s *S3) delete(key string) error {
+	_, err := s.cli.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(s.Config.S3Config.BucketName),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
