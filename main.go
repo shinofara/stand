@@ -5,7 +5,6 @@ import (
 	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/compressor"
 	"github.com/shinofara/stand/config"
-	"log"
 )
 
 type Args struct {
@@ -34,7 +33,8 @@ func main() {
 
 		b := &backup.Backup{Config: cfg}
 
-		log.Print(output)
-		b.Exec(output)
+		if err := b.Exec(output); err != nil {
+			panic(err)
+		}
 	}
 }

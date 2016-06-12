@@ -1,6 +1,38 @@
-hash: dad6f6cb4c9272902d676e6f8dca5294f211cc67f6a194939e10f83da82cae63
-updated: 2016-06-11T16:31:40.421018393+09:00
+hash: b06461ff45de9d691d662096e024b9a9f3cebb14041d835bac7c99e982a23fe5
+updated: 2016-06-12T12:24:45.526094318+09:00
 imports:
+- name: github.com/aws/aws-sdk-go
+  version: 64c371362a7b5ecafa2d7cdf90d19aba7343ae02
+  subpackages:
+  - /aws
+- name: github.com/davecgh/go-spew
+  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  subpackages:
+  - spew
+- name: github.com/go-ini/ini
+  version: 72ba3e6b9e6b87e0c74c9a7a4dc86e8dd8ba4355
+- name: github.com/jmespath/go-jmespath
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+- name: github.com/lsegal/gucumber
+  version: 5692705bb5ff96c5d7b33819b4739715008cc635
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/shiena/ansicolor
+  version: a422bbe96644373c5753384a59d678f7d261ff10
+- name: github.com/stretchr/objx
+  version: cbeaeb16a013161a98496fad62933b1d21786672
+- name: github.com/stretchr/testify
+  version: 8d64eb7173c7753d6419fd4a9caf057398611364
+- name: golang.org/x/crypto
+  version: 77f4136a99ffb5ecdbdd0226bd5cb146cf56bc0e
+- name: golang.org/x/net
+  version: 3f122ce3dbbe488b7e6a8bdb26f41edec852a40b
+- name: golang.org/x/text
+  version: e4775119bd79944a15a741ac4be61e43509a70d9
+- name: golang.org/x/tools
+  version: 95963e031d86b0e7dafe40fde044d7f610404855
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 devImports: []
