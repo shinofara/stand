@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"github.com/shinofara/stand/backup"
-	"github.com/shinofara/stand/cleaner"
 	"github.com/shinofara/stand/compressor"
 	"github.com/shinofara/stand/config"
 	"log"
@@ -33,16 +32,9 @@ func main() {
 			panic(err)
 		}
 
-		b := &backup.Backup{
-			BackupDir: cfg.OutputDir,
-		}
+		b := &backup.Backup{Config: cfg}
 
 		log.Print(output)
 		b.Exec(output)
-
-		if err := cleaner.Exec(cfg); err != nil {
-			panic(err)
-		}
-
 	}
 }
