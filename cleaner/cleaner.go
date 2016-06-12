@@ -8,23 +8,21 @@ import (
 	"sort"
 )
 
-func Exec(cfgs *config.Configs) error {
+func Exec(cfg *config.Config) error {
 
-	for _, cfg := range *cfgs {
-		files, _ := find.All(cfg.OutputDir)
-		sort.Sort(sort.Reverse(sort.StringSlice(files)))
+	files, _ := find.All(cfg.OutputDir)
+	sort.Sort(sort.Reverse(sort.StringSlice(files)))
 
-		var num int64 = 0
-		for _, file := range files {
-			if num >= cfg.LifeCyrcle {
-				path := fmt.Sprintf("%s/%s", cfg.OutputDir, file)
-				if err := os.RemoveAll(path); err != nil {
-					return err
-				}
+	var num int64 = 0
+	for _, file := range files {
+		if num >= cfg.LifeCyrcle {
+			path := fmt.Sprintf("%s/%s", cfg.OutputDir, file)
+			if err := os.RemoveAll(path); err != nil {
+				return err
 			}
-
-			num++
 		}
+
+		num++
 	}
 	return nil
 }

@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/cleaner"
 	"github.com/shinofara/stand/compressor"
 	"github.com/shinofara/stand/config"
+	"log"
 )
 
 type Args struct {
@@ -24,13 +26,23 @@ func main() {
 
 	cfgs, _ := config.New(args.ConfigPath)
 
-	err := compressor.Compress(cfgs)
+	for _, cfg := range *cfgs {
+		output, err := compressor.Compress(cfg)
 
-	if err != nil {
-		panic(err)
-	}
+		if err != nil {
+			panic(err)
+		}
 
-	if err := cleaner.Exec(cfgs); err != nil {
-		panic(err)
+		b := &backup.Backup{
+			BackupDir: cfg.OutputDir,
+		}
+
+		log.Print(output)
+		b.Exec(output)
+
+		if err := cleaner.Exec(cfg); err != nil {
+			panic(err)
+		}
+
 	}
 }
