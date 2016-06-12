@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/shinofara/stand/cleaner"
+	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/compressor"
 	"github.com/shinofara/stand/config"
 )
@@ -24,13 +24,17 @@ func main() {
 
 	cfgs, _ := config.New(args.ConfigPath)
 
-	err := compressor.Compress(cfgs)
+	for _, cfg := range *cfgs {
+		output, err := compressor.Compress(cfg)
 
-	if err != nil {
-		panic(err)
-	}
+		if err != nil {
+			panic(err)
+		}
 
-	if err := cleaner.Exec(cfgs); err != nil {
-		panic(err)
+		b := &backup.Backup{Config: cfg}
+
+		if err := b.Exec(output); err != nil {
+			panic(err)
+		}
 	}
 }

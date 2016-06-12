@@ -1,0 +1,12 @@
+target: "/path/to/target/1"
+location: s3
+output: "/path/to/output/1"
+life_cycle: 1
+compression:
+  prefix: "prefix1"
+  format: zip
+s3:
+  access_key_id: ACCESSKEY
+  secret_access_key: SECRETKEY
+  region: "ap-northeast-1"
+  bucket_name: "sample"

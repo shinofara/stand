@@ -12,52 +12,36 @@ const (
 	TIME_FORMAT = "20060102150405"
 )
 
-func Compress(cfgs *config.Configs) error {
+func Compress(cfg *config.Config) (string, error) {
+	var compressedFile *os.File
+	var err error
 
-	for _, cfg := range *cfgs {
-		var compressedFile *os.File
-		var err error
+	var compressor format.Compressor
 
-		if err := mkdir(cfg.OutputDir); err != nil {
-			return err
-		}
-
-		var compressor format.Compressor
-
-		switch cfg.CompressionConfig.Format {
-		case "zip":
-			compressor = format.NewZipCompressor()
-		case "tar":
-			compressor = format.NewTarCompressor()
-		default:
-			return fmt.Errorf("Not exists compression format")
-		}
-
-		output := makeCompressedFileName(cfg)
-
-		paths, _ := find(cfg.TargetDir)
-
-		//ZIPファイル作成
-		if compressedFile, err = os.Create(output); err != nil {
-			return err
-		}
-		defer compressedFile.Close()
-
-		if err := compressor.Compress(compressedFile, cfg.TargetDir, paths); err != nil {
-			return err
-		}
+	switch cfg.CompressionConfig.Format {
+	case "zip":
+		compressor = format.NewZipCompressor()
+	case "tar":
+		compressor = format.NewTarCompressor()
+	default:
+		return "", fmt.Errorf("Not exists compression format")
 	}
 
-	return nil
-}
+	output := makeCompressedFileName(cfg)
 
-func mkdir(path string) error {
-	if _, err := os.Stat(path); err != nil {
-		if err := os.Mkdir(path, 0777); err != nil {
-			return err
-		}
+	paths, _ := find(cfg.TargetDir)
+
+	//ZIPファイル作成
+	if compressedFile, err = os.Create("/tmp/" + output); err != nil {
+		return "", err
 	}
-	return nil
+	defer compressedFile.Close()
+
+	if err := compressor.Compress(compressedFile, cfg.TargetDir, paths); err != nil {
+		return "", err
+	}
+
+	return output, nil
 }
 
 func makeCompressedFileName(cfg *config.Config) string {
@@ -72,6 +56,6 @@ func makeCompressedFileName(cfg *config.Config) string {
 	default:
 		panic("")
 	}
-	output := fmt.Sprintf("%s/%s_%s.%s", cfg.OutputDir, cfg.CompressionConfig.Prefix, timestamp, extention)
+	output := fmt.Sprintf("%s_%s.%s", cfg.CompressionConfig.Prefix, timestamp, extention)
 	return output
 }
