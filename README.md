@@ -31,6 +31,30 @@ compression:
   format: zip # or tar
 ```
 
+or
+
+```
+# /path/to/config.yml
+- target: "/path/to/target/dir"
+  output: "/path/to/output/dir"
+  life_cycle: 12
+  compression:
+    prefix: sample
+    format: zip # or tar
+- target: "/path/to/target/dir"
+  location: "s3"
+  output: "/path/to/output/dir"
+  life_cycle: 12
+  s3:
+    access_key_id: XXXXXXXXXXXXXXXXXXX
+    secret_access_key: XXXXXXXXXXXXXXXXXXX
+    region: "ap-northeast-1"
+    bucket_name: "backupbacket"    
+  compression:
+    prefix: sample
+    format: zip # or tar    
+```
+
 Unit of `life_cycle` is the number of files .
 
 # Contribution
