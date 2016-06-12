@@ -23,36 +23,40 @@ $ stand -conf /path/to/config.yml
 
 ```
 # /path/to/config.yml
-target: "/path/to/target/dir"
-output: "/path/to/output/dir"
-life_cycle: 12
+type: dir # or file
+path: "/path/to/target/1"
 compression:
-  prefix: sample
+  prefix: "prefix1"
   format: zip # or tar
+storage:
+  type: local
+  path: "/path/to/output/1"
+  life_cycle: 1
 ```
 
 or
 
 ```
 # /path/to/config.yml
-- target: "/path/to/target/dir"
-  output: "/path/to/output/dir"
-  life_cycle: 12
+- type: file
+  path: "/path/to/file/path"
+  storage:
+    path: "/path/to/local/directory"
+    life_cycle: 1
+- type: dir
+  path: "/path/to/compress/target/directory"
   compression:
-    prefix: sample
+    prefix: sample # prefix_YYYYMMDDHHMiss.zip
     format: zip # or tar
-- target: "/path/to/target/dir"
-  location: "s3"
-  output: "/path/to/output/dir"
-  life_cycle: 12
-  s3:
-    access_key_id: XXXXXXXXXXXXXXXXXXX
-    secret_access_key: XXXXXXXXXXXXXXXXXXX
-    region: "ap-northeast-1"
-    bucket_name: "backupbacket"    
-  compression:
-    prefix: sample
-    format: zip # or tar    
+  storage:
+    type: s3
+    path: "/path/to/s3/path"
+    life_cycle: 2
+    s3:
+      access_key_id: AKXXXXXXXXXXXX
+      secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
+      region: "ap-northeast-1"
+      bucket_name: "backup_bucket_name"
 ```
 
 Unit of `life_cycle` is the number of files .
