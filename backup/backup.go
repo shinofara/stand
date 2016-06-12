@@ -12,7 +12,7 @@ type Backup struct {
 func (b *Backup) Exec(file string) error {
 	var loc location.Location
 
-	switch b.Config.Location {
+	switch b.Config.StorageConfig.Type {
 	case "s3":
 		loc = location.NewS3(b.Config)
 	default:

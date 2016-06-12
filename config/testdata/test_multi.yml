@@ -1,12 +1,18 @@
-- target: "/path/to/target/1"
-  output: "/path/to/output/1"
-  life_cycle: 1
+- type: dir
+  path: "/path/to/target/1"
   compression:
     prefix: "prefix1"
     format: zip
-- target: "/path/to/target/2"
-  output: "/path/to/output/2"
-  life_cycle: 2
+  storage:
+    type: local
+    path: "/path/to/output/1"
+    life_cycle: 1
+- type: dir
+  path: "/path/to/target/2"
   compression:
     prefix: "prefix2"
     format: tar
+  storage:
+    type: local
+    path: "/path/to/output/2"
+    life_cycle: 2
