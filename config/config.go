@@ -19,7 +19,22 @@ type CompressionConfig struct {
 	Format string `yaml:"format"` // format of the compression file.
 }
 
-func New(path string) (*Configs, error) {
+func Load(path string) (*Configs, error) {
+	cfgs, err := loadYAML(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, cfg := range *cfgs {
+		if cfg.StorageConfig.Type == "s3" {
+			mergeDefaultS3Config(cfg.StorageConfig.S3Config)
+		}
+	}
+
+	return cfgs, nil
+}
+
+func loadYAML(path string) (*Configs, error) {
 	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err

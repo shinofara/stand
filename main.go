@@ -22,7 +22,7 @@ func main() {
 		panic("-c is empty")
 	}
 
-	cfgs, _ := config.New(args.ConfigPath)
+	cfgs, _ := config.Load(args.ConfigPath)
 
 	for _, cfg := range *cfgs {
 		var uploadFileName string
