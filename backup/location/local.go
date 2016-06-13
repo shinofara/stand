@@ -35,7 +35,7 @@ func (l *Local) Clean() error {
 
 	var num int64 = 0
 	for _, file := range files {
-		if num >= l.Config.StorageConfig.LifeCyrcle {
+		if num > l.Config.StorageConfig.LifeCyrcle {
 			path := fmt.Sprintf("%s/%s", l.Config.StorageConfig.Path, file)
 			if err := os.RemoveAll(path); err != nil {
 				return err
