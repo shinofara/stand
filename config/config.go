@@ -3,6 +3,12 @@ package config
 import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
+)
+
+const (
+	TYPE_FILE = "file"
+	TYPE_DIR  = "dir"
 )
 
 type Configs []*Config
@@ -14,11 +20,6 @@ type Config struct {
 	StorageConfig     StorageConfig      `yaml:"storage"`
 }
 
-type CompressionConfig struct {
-	Prefix string `yaml:"prefix"` // prefix of the compression file name.
-	Format string `yaml:"format"` // format of the compression file.
-}
-
 func Load(path string) (*Configs, error) {
 	cfgs, err := loadYAML(path)
 	if err != nil {
@@ -27,7 +28,11 @@ func Load(path string) (*Configs, error) {
 
 	for _, cfg := range *cfgs {
 		if cfg.StorageConfig.Type == "s3" {
-			mergeDefaultS3Config(cfg.StorageConfig.S3Config)
+			cfg.StorageConfig.S3Config = mergeDefaultS3Config(cfg.StorageConfig.S3Config)
+			log.Printf("%+V", cfg)
+		}
+		if cfg.Type == TYPE_DIR {
+			cfg.CompressionConfig = mergeDefaultCompressionConfig(cfg.CompressionConfig)
 		}
 	}
 
