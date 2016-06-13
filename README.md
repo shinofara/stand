@@ -21,6 +21,7 @@ $ stand -conf /path/to/config.yml
 
 # Configration
 
+
 ```
 # /path/to/config.yml
 type: dir # or file
@@ -57,6 +58,31 @@ or
       secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
       region: "ap-northeast-1"
       bucket_name: "backup_bucket_name"
+```
+
+## S3 Config pattern
+
+### Pattern set in YAML
+
+```
+- .
+  other settings
+  .
+  .
+  storage:
+    s3:
+      access_key_id: AKXXXXXXXXXXXX
+      secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
+      region: "ap-northeast-1"
+      bucket_name: "backup_bucket_name"
+```
+
+### Pattern to be set in the environment variable
+
+```
+$ export AWS_ACCESS_KEY_ID=AKIXXXXXXXXXXXXXX
+$ export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+$ export AWS_DEFAULT_REGION=ap-northeast-1
 ```
 
 Unit of `life_cycle` is the number of files .
