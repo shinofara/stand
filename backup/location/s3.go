@@ -72,7 +72,7 @@ func (s *S3) Clean() error {
 
 	var num int64 = 0
 	for _, key := range keys {
-		if num >= s.Config.StorageConfig.LifeCyrcle {
+		if num > s.Config.StorageConfig.LifeCyrcle {
 			// delete
 			if err := s.delete(key); err != nil {
 				return err

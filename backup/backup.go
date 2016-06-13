@@ -25,6 +25,10 @@ func (b *Backup) Exec(file string) error {
 		return err
 	}
 
+	if b.Config.StorageConfig.LifeCyrcle == 0 {
+		return nil
+	}
+
 	if err := loc.Clean(); err != nil {
 		return err
 	}
