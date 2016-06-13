@@ -1,7 +1,6 @@
 package location
 
 import (
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -38,7 +37,8 @@ func NewS3(cfg *config.Config) *S3 {
 }
 
 func (s *S3) Save(localDir string, filename string) error {
-	file, err := os.Open(fmt.Sprintf("%s/%s", localDir, filename))
+	tmpPath := localDir + "/" + filename
+	file, err := os.Open(tmpPath)
 	if err != nil {
 		return err
 	}
@@ -50,6 +50,10 @@ func (s *S3) Save(localDir string, filename string) error {
 		Body:   file,
 	})
 	if err != nil {
+		return err
+	}
+
+	if err := os.RemoveAll(tmpPath); err != nil {
 		return err
 	}
 

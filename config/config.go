@@ -5,6 +5,11 @@ import (
 	"io/ioutil"
 )
 
+const (
+	TYPE_FILE = "file"
+	TYPE_DIR  = "dir"
+)
+
 type Configs []*Config
 
 type Config struct {
@@ -14,12 +19,25 @@ type Config struct {
 	StorageConfig     StorageConfig      `yaml:"storage"`
 }
 
-type CompressionConfig struct {
-	Prefix string `yaml:"prefix"` // prefix of the compression file name.
-	Format string `yaml:"format"` // format of the compression file.
+func Load(path string) (*Configs, error) {
+	cfgs, err := loadYAML(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, cfg := range *cfgs {
+		if cfg.StorageConfig.Type == "s3" {
+			cfg.StorageConfig.S3Config = mergeDefaultS3Config(cfg.StorageConfig.S3Config)
+		}
+		if cfg.Type == TYPE_DIR {
+			cfg.CompressionConfig = mergeDefaultCompressionConfig(cfg.CompressionConfig)
+		}
+	}
+
+	return cfgs, nil
 }
 
-func New(path string) (*Configs, error) {
+func loadYAML(path string) (*Configs, error) {
 	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err

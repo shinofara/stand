@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNew(t *testing.T) {
+func TestLoad(t *testing.T) {
 	expected := &Configs{
 		&Config{
 			Type: "dir",
@@ -23,14 +23,14 @@ func TestNew(t *testing.T) {
 		},
 	}
 
-	actual, _ := New("./testdata/test.yml")
+	actual, _ := Load("./testdata/test.yml")
 
 	if !reflect.DeepEqual(expected, actual) {
 		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
 	}
 }
 
-func TestNewMulti(t *testing.T) {
+func TestLoadMulti(t *testing.T) {
 	expected := &Configs{
 		&Config{
 			Type: "dir",
@@ -60,14 +60,14 @@ func TestNewMulti(t *testing.T) {
 		},
 	}
 
-	actual, _ := New("./testdata/test_multi.yml")
+	actual, _ := Load("./testdata/test_multi.yml")
 
 	if !reflect.DeepEqual(expected, actual) {
 		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)
 	}
 }
 
-func TestNewS3(t *testing.T) {
+func TestLoadS3(t *testing.T) {
 	expected := &Configs{
 		&Config{
 			Type: "dir",
@@ -90,7 +90,7 @@ func TestNewS3(t *testing.T) {
 		},
 	}
 
-	actual, _ := New("./testdata/test_s3.yml")
+	actual, _ := Load("./testdata/test_s3.yml")
 
 	if !reflect.DeepEqual(expected, actual) {
 		t.Errorf("Must be equal, \ne is %+v \na is %+v", expected, actual)

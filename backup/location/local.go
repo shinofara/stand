@@ -17,7 +17,12 @@ func (l *Local) Save(localDir string, filename string) error {
 		return err
 	}
 
-	if err := os.Rename(localDir+"/"+filename, l.Config.StorageConfig.Path+"/"+filename); err != nil {
+	tmpPath := localDir + "/" + filename
+	storagePath := l.Config.StorageConfig.Path + "/" + filename
+	if err := os.Rename(tmpPath, storagePath); err != nil {
+		return err
+	}
+	if err := os.RemoveAll(tmpPath); err != nil {
 		return err
 	}
 

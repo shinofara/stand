@@ -19,12 +19,10 @@ func Compress(cfg *config.Config) (string, error) {
 	var compressor format.Compressor
 
 	switch cfg.CompressionConfig.Format {
-	case "zip":
-		compressor = format.NewZipCompressor()
 	case "tar":
 		compressor = format.NewTarCompressor()
 	default:
-		return "", fmt.Errorf("Not exists compression format")
+		compressor = format.NewZipCompressor()
 	}
 
 	output := makeCompressedFileName(cfg)
@@ -47,15 +45,17 @@ func Compress(cfg *config.Config) (string, error) {
 func makeCompressedFileName(cfg *config.Config) string {
 	timestamp := time.Now().Format(TIME_FORMAT)
 
-	extention := ""
+	extention := "zip"
 	switch cfg.CompressionConfig.Format {
-	case "zip":
-		extention = "zip"
 	case "tar":
 		extention = "tar.gz"
-	default:
-		panic("")
 	}
-	output := fmt.Sprintf("%s_%s.%s", cfg.CompressionConfig.Prefix, timestamp, extention)
+
+	var output string
+	if cfg.CompressionConfig.Prefix != "" {
+		output = fmt.Sprintf("%s%s.%s", cfg.CompressionConfig.Prefix, timestamp, extention)
+	} else {
+		output = fmt.Sprintf("%s.%s", timestamp, extention)
+	}
 	return "/tmp/" + output
 }
