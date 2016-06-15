@@ -10,12 +10,13 @@ func TestLoad(t *testing.T) {
 		&Config{
 			Type: "dir",
 			Path: "/path/to/target/1",
-			StorageConfig: StorageConfig{
-				Type:       "local",
-				Path:       "/path/to/output/1",
-				LifeCyrcle: 1,
+			StorageConfigs: []StorageConfig{
+				StorageConfig{
+					Type:       "local",
+					Path:       "/path/to/output/1",
+					LifeCyrcle: 1,
+				},
 			},
-
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix1",
 				Format: "zip",
@@ -35,10 +36,12 @@ func TestLoadMulti(t *testing.T) {
 		&Config{
 			Type: "dir",
 			Path: "/path/to/target/1",
-			StorageConfig: StorageConfig{
-				Type:       "local",
-				Path:       "/path/to/output/1",
-				LifeCyrcle: 1,
+			StorageConfigs: []StorageConfig{
+				StorageConfig{
+					Type:       "local",
+					Path:       "/path/to/output/1",
+					LifeCyrcle: 1,
+				},
 			},
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix1",
@@ -48,10 +51,12 @@ func TestLoadMulti(t *testing.T) {
 		&Config{
 			Type: "dir",
 			Path: "/path/to/target/2",
-			StorageConfig: StorageConfig{
-				Type:       "local",
-				Path:       "/path/to/output/2",
-				LifeCyrcle: 2,
+			StorageConfigs: []StorageConfig{
+				StorageConfig{
+					Type:       "local",
+					Path:       "/path/to/output/2",
+					LifeCyrcle: 2,
+				},
 			},
 			CompressionConfig: &CompressionConfig{
 				Prefix: "prefix2",
@@ -72,15 +77,17 @@ func TestLoadS3(t *testing.T) {
 		&Config{
 			Type: "dir",
 			Path: "/path/to/target/1",
-			StorageConfig: StorageConfig{
-				Type:       "s3",
-				Path:       "/path/to/output/1",
-				LifeCyrcle: 1,
-				S3Config: &S3Config{
-					AccessKeyID:     "ACCESSKEY",
-					SecretAccessKey: "SECRETKEY",
-					Region:          "ap-northeast-1",
-					BucketName:      "sample",
+			StorageConfigs: []StorageConfig{
+				StorageConfig{
+					Type:       "s3",
+					Path:       "/path/to/output/1",
+					LifeCyrcle: 1,
+					S3Config: &S3Config{
+						AccessKeyID:     "ACCESSKEY",
+						SecretAccessKey: "SECRETKEY",
+						Region:          "ap-northeast-1",
+						BucketName:      "sample",
+					},
 				},
 			},
 			CompressionConfig: &CompressionConfig{
