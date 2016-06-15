@@ -11,13 +11,13 @@ import (
 )
 
 type S3 struct {
-	Config *config.Config
-	cli    *s3.S3
+	cli        *s3.S3
+	storageCfg *config.StorageConfig
 }
 
-func NewS3(cfg *config.Config) *S3 {
+func NewS3(storageCfg *config.StorageConfig) *S3 {
 
-	s3Config := cfg.StorageConfig.S3Config
+	s3Config := storageCfg.S3Config
 	cre := credentials.NewStaticCredentials(
 		s3Config.AccessKeyID,
 		s3Config.SecretAccessKey,
@@ -29,8 +29,8 @@ func NewS3(cfg *config.Config) *S3 {
 	})
 
 	s := &S3{
-		Config: cfg,
-		cli:    cli,
+		cli:        cli,
+		storageCfg: storageCfg,
 	}
 
 	return s
@@ -45,15 +45,11 @@ func (s *S3) Save(localDir string, filename string) error {
 	defer file.Close()
 
 	_, err = s.cli.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(s.Config.StorageConfig.S3Config.BucketName),
+		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
 		Key:    aws.String(filename),
 		Body:   file,
 	})
 	if err != nil {
-		return err
-	}
-
-	if err := os.RemoveAll(tmpPath); err != nil {
 		return err
 	}
 
@@ -72,7 +68,7 @@ func (s *S3) Clean() error {
 
 	var num int64 = 0
 	for _, key := range keys {
-		if num > s.Config.StorageConfig.LifeCyrcle {
+		if num > s.storageCfg.LifeCyrcle {
 			// delete
 			if err := s.delete(key); err != nil {
 				return err
@@ -86,14 +82,14 @@ func (s *S3) Clean() error {
 
 func (s *S3) findAll() (*s3.ListObjectsOutput, error) {
 	return s.cli.ListObjects(&s3.ListObjectsInput{
-		Bucket: aws.String(s.Config.StorageConfig.S3Config.BucketName),
+		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
 	})
 
 }
 
 func (s *S3) delete(key string) error {
 	_, err := s.cli.DeleteObject(&s3.DeleteObjectInput{
-		Bucket: aws.String(s.Config.StorageConfig.S3Config.BucketName),
+		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
 		Key:    aws.String(key),
 	})
 

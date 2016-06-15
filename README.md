@@ -29,10 +29,10 @@ path: "/path/to/target/1"
 compression:
   prefix: "prefix1"
   format: zip # or tar
-storage:
-  type: local
-  path: "/path/to/output/1"
-  life_cycle: 1
+storages:
+  - type: local
+    path: "/path/to/output/1"
+    life_cycle: 1
 ```
 
 or
@@ -41,23 +41,23 @@ or
 # /path/to/config.yml
 - type: file
   path: "/path/to/file/path"
-  storage:
-    path: "/path/to/local/directory"
-    life_cycle: 1
+  storages:
+    - path: "/path/to/local/directory"
+      life_cycle: 1
 - type: dir
   path: "/path/to/compress/target/directory"
   compression:
     prefix: sample # prefix_YYYYMMDDHHMiss.zip
     format: zip # or tar
-  storage:
-    type: s3
-    path: "/path/to/s3/path"
-    life_cycle: 2
-    s3:
-      access_key_id: AKXXXXXXXXXXXX
-      secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
-      region: "ap-northeast-1"
-      bucket_name: "backup_bucket_name"
+  storages:
+      type: s3
+      path: "/path/to/s3/path"
+      life_cycle: 2
+      s3:
+        access_key_id: AKXXXXXXXXXXXX
+        secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
+        region: "ap-northeast-1"
+        bucket_name: "backup_bucket_name"
 ```
 
 ## S3 Config pattern
@@ -69,12 +69,12 @@ or
   other settings
   .
   .
-  storage:
-    s3:
-      access_key_id: AKXXXXXXXXXXXX
-      secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
-      region: "ap-northeast-1"
-      bucket_name: "backup_bucket_name"
+  storages:
+    - s3:
+        access_key_id: AKXXXXXXXXXXXX
+        secret_access_key: yXxxxxxxXXXXXXXXXXXXXXXX
+        region: "ap-northeast-1"
+        bucket_name: "backup_bucket_name"
 ```
 
 ### Pattern to be set in the environment variable

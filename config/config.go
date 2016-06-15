@@ -16,7 +16,7 @@ type Config struct {
 	Type              string             `yaml:"type"` //type of target object
 	Path              string             `yaml:"path"` //path to backup target dir
 	CompressionConfig *CompressionConfig `yaml:"compression"`
-	StorageConfig     StorageConfig      `yaml:"storage"`
+	StorageConfigs    []StorageConfig    `yaml:"storages"`
 }
 
 func Load(path string) (*Configs, error) {
@@ -26,8 +26,12 @@ func Load(path string) (*Configs, error) {
 	}
 
 	for _, cfg := range *cfgs {
-		if cfg.StorageConfig.Type == "s3" {
-			cfg.StorageConfig.S3Config = mergeDefaultS3Config(cfg.StorageConfig.S3Config)
+		for _, storage := range cfg.StorageConfigs {
+
+			if storage.Type == "s3" {
+				storage.S3Config = mergeDefaultS3Config(storage.S3Config)
+			}
+
 		}
 		if cfg.Type == TYPE_DIR {
 			cfg.CompressionConfig = mergeDefaultCompressionConfig(cfg.CompressionConfig)

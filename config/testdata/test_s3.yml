@@ -3,12 +3,12 @@ path: "/path/to/target/1"
 compression:
   prefix: "prefix1"
   format: zip
-storage:
-  type: s3
-  path: "/path/to/output/1"
-  life_cycle: 1
-  s3:
-    access_key_id: ACCESSKEY
-    secret_access_key: SECRETKEY
-    region: "ap-northeast-1"
-    bucket_name: "sample"
+storages:
+  - type: s3
+    path: "/path/to/output/1"
+    life_cycle: 1
+    s3:
+      access_key_id: ACCESSKEY
+      secret_access_key: SECRETKEY
+      region: "ap-northeast-1"
+      bucket_name: "sample"

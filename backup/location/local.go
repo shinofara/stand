@@ -9,20 +9,23 @@ import (
 )
 
 type Local struct {
-	Config *config.Config
+	storageCfg *config.StorageConfig
+}
+
+func NewLocal(storageCfg *config.StorageConfig) *Local {
+	return &Local{
+		storageCfg: storageCfg,
+	}
 }
 
 func (l *Local) Save(localDir string, filename string) error {
-	if err := mkdir(l.Config.StorageConfig.Path); err != nil {
+	if err := mkdir(l.storageCfg.Path); err != nil {
 		return err
 	}
 
 	tmpPath := localDir + "/" + filename
-	storagePath := l.Config.StorageConfig.Path + "/" + filename
+	storagePath := l.storageCfg.Path + "/" + filename
 	if err := os.Rename(tmpPath, storagePath); err != nil {
-		return err
-	}
-	if err := os.RemoveAll(tmpPath); err != nil {
 		return err
 	}
 
@@ -30,13 +33,13 @@ func (l *Local) Save(localDir string, filename string) error {
 }
 
 func (l *Local) Clean() error {
-	files, _ := find.All(l.Config.StorageConfig.Path)
+	files, _ := find.All(l.storageCfg.Path)
 	sort.Sort(sort.Reverse(sort.StringSlice(files)))
 
 	var num int64 = 0
 	for _, file := range files {
-		if num > l.Config.StorageConfig.LifeCyrcle {
-			path := fmt.Sprintf("%s/%s", l.Config.StorageConfig.Path, file)
+		if num > l.storageCfg.LifeCyrcle {
+			path := fmt.Sprintf("%s/%s", l.storageCfg.Path, file)
 			if err := os.RemoveAll(path); err != nil {
 				return err
 			}
