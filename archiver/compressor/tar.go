@@ -2,6 +2,7 @@ package compressor
 
 import (
 	"archive/tar"
+	"compress/gzip"
 	"io"
 	"io/ioutil"
 )
@@ -14,7 +15,9 @@ func NewTarCompressor() *TarCompressor {
 
 func (c *TarCompressor) Compress(compressedFile io.Writer, targetDir string, files []string) error {
 
-	tw := tar.NewWriter(compressedFile)
+	gw := gzip.NewWriter(compressedFile)
+	defer gw.Close()
+	tw := tar.NewWriter(gw)
 
 	for _, file := range files {
 		body, _ := ioutil.ReadFile(targetDir + "/" + file)
