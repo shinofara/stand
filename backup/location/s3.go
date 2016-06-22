@@ -46,7 +46,7 @@ func (s *S3) Save(localDir string, filename string) error {
 
 	_, err = s.cli.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
-		Key:    aws.String(filename),
+		Key:    aws.String(s.storageCfg.Path + "/" + filename),
 		Body:   file,
 	})
 	if err != nil {
