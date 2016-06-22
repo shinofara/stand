@@ -1,4 +1,4 @@
-package format
+package compressor
 
 import (
 	"archive/tar"
