@@ -1,34 +1,28 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"time"
+
 	"github.com/shinofara/stand/archiver"
 	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/config"
-	"time"
+
+	flag "github.com/docker/docker/pkg/mflag"
+	"log"
 )
 
 const (
 	TIME_FORMAT = "20060102150405"
 )
 
-type Args struct {
-	ConfigPath string
-}
+var (
+	flCfgPath    = flag.String([]string{"c", "-conf"}, "", "path to config yaml")
+	flOutputPath = flag.String([]string{"o", "-out"}, "", "path to output dir")
+)
 
 func main() {
-	var args Args
-
-	flag.StringVar(&args.ConfigPath, "conf", "", "-c path to config yaml")
-	// コマンドライン引数を解析
-	flag.Parse()
-
-	if args.ConfigPath == "" {
-		panic("-c is empty")
-	}
-
-	cfgs, _ := config.Load(args.ConfigPath)
+	cfgs := initCfg()
 
 	for _, cfg := range *cfgs {
 		var uploadFileName string
@@ -72,4 +66,42 @@ func makeCompressedFileName(cfg *config.Config) string {
 		output = fmt.Sprintf("%s.%s", timestamp, extention)
 	}
 	return "/tmp/" + output
+}
+
+//initCfg initialize configs
+func initCfg() *config.Configs {
+	flag.Parse()
+
+	if *flCfgPath == "" {
+		return loadOption()
+	}
+
+	return loadCfg(*flCfgPath)
+}
+
+func loadCfg(path string) *config.Configs {
+	cfgs, err := config.Load(path)
+	if err != nil {
+		panic(err)
+	}
+
+	return cfgs
+}
+
+func loadOption() *config.Configs {
+	cfg := &config.Config{
+		Type: "dir",
+		Path: flag.Arg(0),
+		CompressionConfig: &config.CompressionConfig{
+			Format: "zip",
+		},
+		StorageConfigs: []config.StorageConfig{
+			config.StorageConfig{
+				Type: "local",
+				Path: *flOutputPath,
+			},
+		},
+	}
+
+	return &config.Configs{cfg}
 }
