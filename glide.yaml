@@ -4,3 +4,6 @@ import:
 - package: github.com/aws/aws-sdk-go
   subpackages:
   - /aws
+- package: github.com/docker/docker
+  subpackages:
+  - /pkg/mflag
