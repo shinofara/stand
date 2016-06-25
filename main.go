@@ -9,7 +9,6 @@ import (
 	"github.com/shinofara/stand/config"
 
 	flag "github.com/docker/docker/pkg/mflag"
-	"log"
 )
 
 const (

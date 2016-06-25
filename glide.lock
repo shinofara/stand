@@ -1,5 +1,5 @@
 hash: c6b537fb01967c3608175dbd977c47354dcf58fdb6c6ad0ce41200b3ff025b40
-updated: 2016-06-25T00:56:24.443805194+09:00
+updated: 2016-06-25T11:57:28.136637308+09:00
 imports:
 - name: code.google.com/p/go.net
   version: ""
@@ -239,7 +239,7 @@ imports:
   version: 0517d5728ed46bd2c5ce3447bdfdb55a53c80a9b
   repo: https://github.com/docker/notary
 - name: github.com/docker/swarmkit
-  version: b4644d8af36ea9de2dc4e83ee32dff72e72d439c
+  version: 437f4d6ec8ca2d74d4d551a7ed6e9897cc13b39a
   repo: https://github.com/docker/swarmkit
 - name: github.com/dustin/go-humanize
   version: 8929fe90cee4b2cb9deb468b51fb34eba64d1bf0
@@ -477,6 +477,7 @@ imports:
   - oid
 - name: github.com/lsegal/gucumber
   version: 5692705bb5ff96c5d7b33819b4739715008cc635
+  repo: https://github.com/lsegal/gucumber
 - name: github.com/magiconair/properties
   version: 624009598839a9432bd97bb75552389422357723
 - name: github.com/mattn/go-isatty
@@ -562,7 +563,7 @@ imports:
   subpackages:
   - specs-go
 - name: github.com/opencontainers/specs
-  version: 0473c7e6f1bf254c8d93b1744ac3de9e3977ee85
+  version: b45aa77484bb771fc50498020063abcbc9b5f4c2
   repo: https://github.com/opencontainers/specs
 - name: github.com/paulbellamy/ratecounter
   version: 5a11f585a31379765c190c033b6ad39956584447
@@ -634,6 +635,7 @@ imports:
   version: 1b506fc7c24eec5a3693cdcbed40d9c226cfc6a1
 - name: github.com/shiena/ansicolor
   version: a422bbe96644373c5753384a59d678f7d261ff10
+  repo: https://github.com/shiena/ansicolor
 - name: github.com/Shopify/logrus-bugsnag
   version: 5a46080c635f13e8b60c24765c19d62e1ca8d0fb
 - name: github.com/shurcooL/sanitized_anchor_name
@@ -666,6 +668,7 @@ imports:
   version: cbeaeb16a013161a98496fad62933b1d21786672
 - name: github.com/stretchr/testify
   version: dab07ac62d4905d3e48d17dc549c684ac3b7c15a
+  repo: https://github.com/stretchr/testify
 - name: github.com/stvp/go-udp-testing
   version: 06eb4f886d9f8242b0c176cf0d3ce5ec2cedda05
 - name: github.com/syndtr/gocapability
@@ -745,7 +748,7 @@ imports:
   subpackages:
   - rate
 - name: golang.org/x/tools
-  version: 8b3828f1c8f7c67e5ebb863a4c632937778eaaae
+  version: 1727758746e7a08feaaceb9366d1468498ac2ac2
 - name: google.golang.org/api
   version: 9bf6e6e569ff057f75d9604a46c52928f17d2b54
   subpackages:
