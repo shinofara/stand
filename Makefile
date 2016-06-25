@@ -17,8 +17,3 @@ clean:
 
 vet:
 	@go vet $$(glide novendor)
-
-
-ci-test:
-	go test -v $(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $CIRCLE_TEST_REPORTS/golang/junit.xml;
-	go vet $(go list ./...|grep -v vendor)
