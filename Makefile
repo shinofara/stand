@@ -1,3 +1,5 @@
+DOCKER_PKG="github.com/shinofara/stand"
+
 default: build-all
 
 build-all: clean build-mac build-linux64
@@ -15,3 +17,10 @@ clean:
 
 vet:
 	@go vet $$(glide novendor)
+
+
+ci-test:
+	mkdir $GOPATH/src/github.com/shinofara
+	ln -sf ../stand $GOPATH/src/github.com/shinofara/stand
+	go test -v $(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $CIRCLE_TEST_REPORTS/golang/junit.xml;
+	go vet $(go list ./...|grep -v vendor)
