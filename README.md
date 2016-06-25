@@ -15,8 +15,18 @@ $ go install github.com/shinofara/stand
 
 # Usage
 
+## Use Config file mode
+
 ```
 $ stand -conf /path/to/config.yml
+```
+
+or
+
+## Use option mode
+
+```
+$ stand -o /path/to/outputdir /path/to/target/dir
 ```
 
 # Configration
