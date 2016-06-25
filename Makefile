@@ -20,7 +20,5 @@ vet:
 
 
 ci-test:
-	mkdir $GOPATH/src/github.com/shinofara
-	ln -sf ../stand ${GOPATH}/src/github.com/shinofara/stand
 	go test -v $(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $CIRCLE_TEST_REPORTS/golang/junit.xml;
 	go vet $(go list ./...|grep -v vendor)
