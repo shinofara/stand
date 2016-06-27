@@ -1,12 +1,15 @@
 package location
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/shinofara/stand/config"
 	"os"
+	"path"
+	"regexp"
 	"sort"
 )
 
@@ -36,6 +39,20 @@ func NewS3(storageCfg *config.StorageConfig) *S3 {
 	return s
 }
 
+func replacePattern(str string) string {
+	rep := regexp.MustCompile(`^/`)
+	path := fmt.Sprintf("%s",
+		rep.ReplaceAllString(str, ""),
+	)
+
+	if regexp.MustCompile(`/$`).MatchString(str) {
+		return fmt.Sprintf("%s*", path)
+	}
+
+	return fmt.Sprintf("%s/*", path)
+
+}
+
 func (s *S3) Save(localDir string, filename string) error {
 	tmpPath := localDir + "/" + filename
 	file, err := os.Open(tmpPath)
@@ -59,9 +76,13 @@ func (s *S3) Save(localDir string, filename string) error {
 func (s *S3) Clean() error {
 	resp, _ := s.findAll()
 
+	pattern := replacePattern(s.storageCfg.Path)
+
 	var keys []string
 	for _, obj := range resp.Contents {
-		keys = append(keys, *obj.Key)
+		if matched, _ := path.Match(pattern, *obj.Key); matched {
+			keys = append(keys, *obj.Key)
+		}
 	}
 
 	sort.Sort(sort.Reverse(sort.StringSlice(keys)))
