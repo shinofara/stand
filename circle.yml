@@ -1,12 +1,16 @@
 dependencies:
   pre:
     - go get -u github.com/jstemmer/go-junit-report
+    - mkdir -p $GOPATH/src/github.com/shinofara
+    - ln -s $HOME/$CIRCLE_PROJECT_REPONAME $GOPATH/src/github.com/shinofara/
 
 test:
   override:
       - mkdir -p $CIRCLE_TEST_REPORTS/golang
       - go test -v $(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $CIRCLE_TEST_REPORTS/golang/junit.xml;
-      - go vet $(go list ./...|grep -v vendor)
+      - ls -s $CIRCLE_TEST_REPORTS $GOPATH/src/ && \
+	cd $GOPATH/src/$CIRCLE_TEST_REPORTS && \
+	go vet $(go list ./...|grep -v vendor)
 
 deployment:
   release:
