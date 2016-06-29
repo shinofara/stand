@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 type ZipCompressor struct{}
@@ -28,18 +29,7 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, fil
 			continue
 		}
 
-		file, err := os.Open(filepath)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
-		hdr, err := zip.FileInfoHeader(info)
-		if err != nil {
-			return err
-		}
-
-		hdr.Name = filename
+		hdr, err := createZipFileHeader(filename, info)
 
 		f, err := w.CreateHeader(hdr)
 		if err != nil {
@@ -58,4 +48,23 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, fil
 	}
 
 	return nil
+}
+
+func createZipFileHeader(filename string, info os.FileInfo) (*zip.FileHeader, error) {
+	hdr, err := zip.FileInfoHeader(info)
+	if err != nil {
+		return nil, err
+	}
+
+	hdr.Name = filename
+
+	local := time.Now().Local()
+
+	//現時刻のオフセットを取得
+	_, offset := local.Zone()
+
+	//差分を追加
+	hdr.SetModTime(hdr.ModTime().Add(time.Duration(offset) * time.Second))
+
+	return hdr, nil
 }
