@@ -29,7 +29,7 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, fil
 			continue
 		}
 
-		hdr, err := createFileHeader(filename, info)
+		hdr, err := createZipFileHeader(filename, info)
 
 		f, err := w.CreateHeader(hdr)
 		if err != nil {
@@ -50,7 +50,7 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, fil
 	return nil
 }
 
-func createFileHeader(filename string, info os.FileInfo) (*zip.FileHeader, error) {
+func createZipFileHeader(filename string, info os.FileInfo) (*zip.FileHeader, error) {
 	hdr, err := zip.FileInfoHeader(info)
 	if err != nil {
 		return nil, err
