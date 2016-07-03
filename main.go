@@ -25,8 +25,6 @@ var (
 
 func main() {
 	// For repeatable tests, pretend that it's always 1970.
-	logger.StubTime()
-
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "logger", logger)
 

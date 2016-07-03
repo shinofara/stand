@@ -5,6 +5,7 @@ import (
 	"github.com/shinofara/stand/config"
 	"os"
 
+	"github.com/uber-go/zap"
 	"golang.org/x/net/context"
 )
 
@@ -48,6 +49,18 @@ func (a *Archiver) Archive(output string) (string, error) {
 	if err := a.compressor.Compress(compressedFile, a.cfg.Path, paths); err != nil {
 		return "", err
 	}
+
+	info, err := compressedFile.Stat()
+	if err != nil {
+		return "", err
+	}
+
+	logger := a.ctx.Value("logger").(zap.Logger)
+	logger.Info(
+		"Compression has been completed",
+		zap.String("name", output),
+		zap.Int64("size", info.Size()),
+	)
 
 	return output, nil
 }
