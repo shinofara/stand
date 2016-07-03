@@ -4,26 +4,29 @@ import (
 	"github.com/shinofara/stand/archiver/compressor"
 	"github.com/shinofara/stand/config"
 	"os"
+
+	"golang.org/x/net/context"
 )
 
 type Archiver struct {
 	cfg        *config.Config
+	ctx        context.Context
 	compressor compressor.Compressor
 }
 
-func New(cfg *config.Config) *Archiver {
-
+func New(ctx context.Context, cfg *config.Config) *Archiver {
 	var c compressor.Compressor
 
 	switch cfg.CompressionConfig.Format {
 	case "tar":
-		c = compressor.NewTarCompressor()
+		c = compressor.NewTarCompressor(ctx)
 	default:
-		c = compressor.NewZipCompressor()
+		c = compressor.NewZipCompressor(ctx)
 	}
 
 	return &Archiver{
 		cfg:        cfg,
+		ctx:        ctx,
 		compressor: c,
 	}
 }
@@ -31,7 +34,10 @@ func New(cfg *config.Config) *Archiver {
 func (a *Archiver) Archive(output string) (string, error) {
 	var compressedFile *os.File
 	var err error
-	paths, _ := find(a.cfg.Path)
+	paths, err := find(a.cfg.Path)
+	if err != nil {
+		return "", err
+	}
 
 	//ZIPファイル作成
 	if compressedFile, err = os.Create(output); err != nil {

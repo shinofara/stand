@@ -5,10 +5,20 @@ import (
 	"github.com/shinofara/stand/config"
 	"os"
 	"path"
+
+	"golang.org/x/net/context"
 )
 
 type Backup struct {
 	Config *config.Config
+	ctx    context.Context
+}
+
+func New(ctx context.Context, cfg *config.Config) *Backup {
+	return &Backup{
+		Config: cfg,
+		ctx:    ctx,
+	}
 }
 
 func (b *Backup) Exec(file string) error {
