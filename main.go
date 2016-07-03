@@ -53,7 +53,7 @@ func main() {
 			logger.Fatal("upload target type is not found")
 		}
 
-		b := &backup.Backup{Config: cfg}
+		b := backup.New(ctx, cfg)
 		if err := b.Exec(uploadFileName); err != nil {
 			logger.Fatal(err.Error())
 		}
