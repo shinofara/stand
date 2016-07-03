@@ -7,12 +7,18 @@ import (
 	"io/ioutil"
 	"os"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
-type ZipCompressor struct{}
+type ZipCompressor struct {
+	ctx context.Context
+}
 
-func NewZipCompressor() *ZipCompressor {
-	return &ZipCompressor{}
+func NewZipCompressor(ctx context.Context) *ZipCompressor {
+	return &ZipCompressor{
+		ctx: ctx,
+	}
 }
 
 func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, files []string) error {

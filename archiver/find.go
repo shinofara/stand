@@ -16,6 +16,10 @@ func find(targetDir string) ([]string, error) {
 				return err
 			}
 
+			if info == nil {
+				return fmt.Errorf("file info is not found")
+			}
+
 			if info.IsDir() {
 				paths = append(paths, fmt.Sprintf("%s/", rel))
 				return nil

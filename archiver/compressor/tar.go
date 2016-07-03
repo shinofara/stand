@@ -7,12 +7,18 @@ import (
 	"io"
 	"log"
 	"os"
+
+	"golang.org/x/net/context"
 )
 
-type TarCompressor struct{}
+type TarCompressor struct {
+	ctx context.Context
+}
 
-func NewTarCompressor() *TarCompressor {
-	return &TarCompressor{}
+func NewTarCompressor(ctx context.Context) *TarCompressor {
+	return &TarCompressor{
+		ctx: ctx,
+	}
 }
 
 func (c *TarCompressor) Compress(compressedFile io.Writer, targetDir string, files []string) error {

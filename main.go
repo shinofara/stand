@@ -9,6 +9,8 @@ import (
 	"github.com/shinofara/stand/config"
 
 	flag "github.com/docker/docker/pkg/mflag"
+	"github.com/uber-go/zap"
+	"golang.org/x/net/context"
 )
 
 const (
@@ -18,10 +20,20 @@ const (
 var (
 	flCfgPath    = flag.String([]string{"c", "-conf"}, "", "path to config yaml")
 	flOutputPath = flag.String([]string{"o", "-out"}, "", "path to output dir")
+	logger       = zap.NewJSON()
 )
 
 func main() {
-	cfgs := initCfg()
+	// For repeatable tests, pretend that it's always 1970.
+	logger.StubTime()
+
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "logger", logger)
+
+	cfgs, err := initCfg()
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
 
 	for _, cfg := range *cfgs {
 		var uploadFileName string
@@ -30,20 +42,20 @@ func main() {
 		switch cfg.Type {
 		case "dir":
 			output := makeCompressedFileName(cfg)
-			a := archiver.New(cfg)
+			a := archiver.New(ctx, cfg)
 			uploadFileName, err = a.Archive(output)
 			if err != nil {
-				panic(err)
+				logger.Fatal(err.Error())
 			}
 		case "file":
 			uploadFileName = cfg.Path
 		default:
-			panic("upload target type is not found")
+			logger.Fatal("upload target type is not found")
 		}
 
 		b := &backup.Backup{Config: cfg}
 		if err := b.Exec(uploadFileName); err != nil {
-			panic(err)
+			logger.Fatal(err.Error())
 		}
 	}
 }
@@ -68,7 +80,7 @@ func makeCompressedFileName(cfg *config.Config) string {
 }
 
 //initCfg initialize configs
-func initCfg() *config.Configs {
+func initCfg() (*config.Configs, error) {
 	flag.Parse()
 
 	if *flCfgPath == "" {
@@ -76,18 +88,19 @@ func initCfg() *config.Configs {
 	}
 
 	return loadCfg(*flCfgPath)
+
 }
 
-func loadCfg(path string) *config.Configs {
+func loadCfg(path string) (*config.Configs, error) {
 	cfgs, err := config.Load(path)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return cfgs
+	return cfgs, nil
 }
 
-func loadOption() *config.Configs {
+func loadOption() (*config.Configs, error) {
 	cfg := &config.Config{
 		Type: "dir",
 		Path: flag.Arg(0),
@@ -102,5 +115,5 @@ func loadOption() *config.Configs {
 		},
 	}
 
-	return &config.Configs{cfg}
+	return &config.Configs{cfg}, nil
 }
