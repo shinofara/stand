@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/shinofara/stand/archiver"
 	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/config"
@@ -11,10 +8,6 @@ import (
 	flag "github.com/docker/docker/pkg/mflag"
 	"github.com/uber-go/zap"
 	"golang.org/x/net/context"
-)
-
-const (
-	TIME_FORMAT = "20060102150405"
 )
 
 var (
@@ -39,9 +32,9 @@ func main() {
 
 		switch cfg.Type {
 		case "dir":
-			output := makeCompressedFileName(cfg)
+
 			a := archiver.New(ctx, cfg)
-			uploadFileName, err = a.Archive(output)
+			uploadFileName, err = a.Archive()
 			if err != nil {
 				logger.Fatal(err.Error())
 			}
@@ -56,25 +49,6 @@ func main() {
 			logger.Fatal(err.Error())
 		}
 	}
-}
-
-//input, output
-func makeCompressedFileName(cfg *config.Config) string {
-	timestamp := time.Now().Format(TIME_FORMAT)
-
-	extention := "zip"
-	switch cfg.CompressionConfig.Format {
-	case "tar":
-		extention = "tar.gz"
-	}
-
-	var output string
-	if cfg.CompressionConfig.Prefix != "" {
-		output = fmt.Sprintf("%s%s.%s", cfg.CompressionConfig.Prefix, timestamp, extention)
-	} else {
-		output = fmt.Sprintf("%s.%s", timestamp, extention)
-	}
-	return "/tmp/" + output
 }
 
 //initCfg initialize configs

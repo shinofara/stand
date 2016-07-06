@@ -10,3 +10,5 @@ build-linux64:
 
 vet:
 	@go vet $$(glide novendor)
+test:
+	@go test $$(glide novendor)

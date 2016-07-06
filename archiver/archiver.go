@@ -1,12 +1,18 @@
 package archiver
 
 import (
+	"fmt"
 	"github.com/shinofara/stand/archiver/compressor"
 	"github.com/shinofara/stand/config"
 	"os"
+	"time"
 
 	"github.com/uber-go/zap"
 	"golang.org/x/net/context"
+)
+
+const (
+	TimeFormat = "20060102150405"
 )
 
 type Archiver struct {
@@ -32,9 +38,10 @@ func New(ctx context.Context, cfg *config.Config) *Archiver {
 	}
 }
 
-func (a *Archiver) Archive(output string) (string, error) {
+func (a *Archiver) Archive() (string, error) {
+	output := a.makeCompressedFileName()
 	var compressedFile *os.File
-	var err error
+
 	paths, err := find(a.cfg.Path)
 	if err != nil {
 		return "", err
@@ -63,4 +70,22 @@ func (a *Archiver) Archive(output string) (string, error) {
 	)
 
 	return output, nil
+}
+
+func (a *Archiver) makeCompressedFileName() string {
+	timestamp := time.Now().Format(TimeFormat)
+
+	extention := "zip"
+	switch a.cfg.CompressionConfig.Format {
+	case "tar":
+		extention = "tar.gz"
+	}
+
+	var output string
+	if a.cfg.CompressionConfig.Prefix != "" {
+		output = fmt.Sprintf("%s%s.%s", a.cfg.CompressionConfig.Prefix, timestamp, extention)
+	} else {
+		output = fmt.Sprintf("%s.%s", timestamp, extention)
+	}
+	return "/tmp/" + output
 }
