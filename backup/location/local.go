@@ -6,6 +6,8 @@ import (
 	"github.com/shinofara/stand/find"
 	"os"
 	"sort"
+
+	"bytes"
 )
 
 type Local struct {
@@ -18,16 +20,18 @@ func NewLocal(storageCfg *config.StorageConfig) *Local {
 	}
 }
 
-func (l *Local) Save(localDir string, filename string) error {
+func (l *Local) Save(filename string, buf *bytes.Buffer) error {
 	if err := mkdir(l.storageCfg.Path); err != nil {
 		return err
 	}
 
-	tmpPath := localDir + "/" + filename
 	storagePath := l.storageCfg.Path + "/" + filename
-	if err := os.Rename(tmpPath, storagePath); err != nil {
+	f, err := os.Create(storagePath)
+	if err != nil {
 		return err
 	}
+	f.Write(buf.Bytes())
+	f.Close()
 
 	return nil
 }

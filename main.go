@@ -17,9 +17,10 @@ var (
 )
 
 func main() {
-	// For repeatable tests, pretend that it's always 1970.
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, "logger", logger)
+	ctx := context.WithValue(
+		context.Background(),
+		"logger",
+		logger)
 
 	cfgs, err := initCfg()
 	if err != nil {
@@ -27,28 +28,26 @@ func main() {
 	}
 
 	for _, cfg := range *cfgs {
-		var uploadFileName string
-		var err error
-
-		switch cfg.Type {
-		case "dir":
-
-			a := archiver.New(ctx, cfg)
-			uploadFileName, err = a.Archive()
-			if err != nil {
-				logger.Fatal(err.Error())
-			}
-		case "file":
-			uploadFileName = cfg.Path
-		default:
-			logger.Fatal("upload target type is not found")
-		}
-
-		b := backup.New(ctx, cfg)
-		if err := b.Exec(uploadFileName); err != nil {
+		if err := bkup(ctx, cfg); err != nil {
 			logger.Fatal(err.Error())
 		}
 	}
+}
+
+func bkup(ctx context.Context, cfg *config.Config) error {
+	a := archiver.New(ctx, cfg)
+	buf, err := a.Archive()
+
+	if err != nil {
+		return err
+	}
+
+	b := backup.New(ctx, cfg)
+	if err := b.Exec(buf); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //initCfg initialize configs
