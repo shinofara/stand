@@ -1,14 +1,21 @@
 package backup
 
 import (
+	"bytes"
+	"fmt"
+	"time"
+
 	"github.com/shinofara/stand/backup/location"
 	"github.com/shinofara/stand/config"
-	"os"
-	"path"
 
 	"golang.org/x/net/context"
 )
 
+const (
+	TimeFormat = "20060102150405"
+)
+
+//Backup manages all of the settings for backup
 type Backup struct {
 	Config *config.Config
 	ctx    context.Context
@@ -21,19 +28,13 @@ func New(ctx context.Context, cfg *config.Config) *Backup {
 	}
 }
 
-func (b *Backup) Exec(file string) error {
+func (b *Backup) Exec(buf *bytes.Buffer) error {
 	var loc location.Location
-	dir, filename := path.Split(file)
+	filename := b.makeCompressedFileName()
 
 	for _, storageCfg := range b.Config.StorageConfigs {
-		switch storageCfg.Type {
-		case "s3":
-			loc = location.NewS3(&storageCfg)
-		default:
-			loc = location.NewLocal(&storageCfg)
-		}
-
-		if err := loc.Save(dir, filename); err != nil {
+		loc = location.New(&storageCfg)
+		if err := loc.Save(filename, buf); err != nil {
 			return err
 		}
 
@@ -46,9 +47,23 @@ func (b *Backup) Exec(file string) error {
 		}
 	}
 
-	if err := os.RemoveAll(file); err != nil {
-		return err
+	return nil
+}
+
+func (b *Backup) makeCompressedFileName() string {
+	timestamp := time.Now().Format(TimeFormat)
+
+	extention := "zip"
+	switch b.Config.CompressionConfig.Format {
+	case "tar":
+		extention = "tar.gz"
 	}
 
-	return nil
+	var filename string
+	if b.Config.CompressionConfig.Prefix != "" {
+		filename = fmt.Sprintf("%s%s.%s", b.Config.CompressionConfig.Prefix, timestamp, extention)
+	} else {
+		filename = fmt.Sprintf("%s.%s", timestamp, extention)
+	}
+	return filename
 }

@@ -1,16 +1,18 @@
 package location
 
 import (
+	"bytes"
 	"fmt"
+	"path"
+	"regexp"
+	"sort"
+
+	"github.com/shinofara/stand/config"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/shinofara/stand/config"
-	"os"
-	"path"
-	"regexp"
-	"sort"
 )
 
 type S3 struct {
@@ -39,32 +41,11 @@ func NewS3(storageCfg *config.StorageConfig) *S3 {
 	return s
 }
 
-func replacePattern(str string) string {
-	rep := regexp.MustCompile(`^/`)
-	path := fmt.Sprintf("%s",
-		rep.ReplaceAllString(str, ""),
-	)
-
-	if regexp.MustCompile(`/$`).MatchString(str) {
-		return fmt.Sprintf("%s*", path)
-	}
-
-	return fmt.Sprintf("%s/*", path)
-
-}
-
-func (s *S3) Save(localDir string, filename string) error {
-	tmpPath := localDir + "/" + filename
-	file, err := os.Open(tmpPath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = s.cli.PutObject(&s3.PutObjectInput{
+func (s *S3) Save(filename string, buf *bytes.Buffer) error {
+	_, err := s.cli.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
 		Key:    aws.String(s.storageCfg.Path + "/" + filename),
-		Body:   file,
+		Body:   bytes.NewReader(buf.Bytes()),
 	})
 	if err != nil {
 		return err
@@ -119,4 +100,18 @@ func (s *S3) delete(key string) error {
 	}
 
 	return nil
+}
+
+func replacePattern(str string) string {
+	rep := regexp.MustCompile(`^/`)
+	path := fmt.Sprintf("%s",
+		rep.ReplaceAllString(str, ""),
+	)
+
+	if regexp.MustCompile(`/$`).MatchString(str) {
+		return fmt.Sprintf("%s*", path)
+	}
+
+	return fmt.Sprintf("%s/*", path)
+
 }
