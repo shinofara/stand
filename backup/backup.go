@@ -11,6 +11,11 @@ import (
 	"golang.org/x/net/context"
 )
 
+const (
+	TimeFormat = "20060102150405"
+)
+
+//Backup manages all of the settings for backup
 type Backup struct {
 	Config *config.Config
 	ctx    context.Context
@@ -44,10 +49,6 @@ func (b *Backup) Exec(buf *bytes.Buffer) error {
 
 	return nil
 }
-
-const (
-	TimeFormat = "20060102150405"
-)
 
 func (b *Backup) makeCompressedFileName() string {
 	timestamp := time.Now().Format(TimeFormat)

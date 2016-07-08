@@ -1,9 +1,8 @@
 package main
 
 import (
-	"github.com/shinofara/stand/archiver"
-	"github.com/shinofara/stand/backup"
 	"github.com/shinofara/stand/config"
+	"github.com/shinofara/stand/coordinator"
 
 	flag "github.com/docker/docker/pkg/mflag"
 	"github.com/uber-go/zap"
@@ -28,26 +27,11 @@ func main() {
 	}
 
 	for _, cfg := range *cfgs {
-		if err := bkup(ctx, cfg); err != nil {
+		c := coordinator.New(ctx, cfg)
+		if err := c.Perform(); err != nil {
 			logger.Fatal(err.Error())
 		}
 	}
-}
-
-func bkup(ctx context.Context, cfg *config.Config) error {
-	a := archiver.New(ctx, cfg)
-	buf, err := a.Archive()
-
-	if err != nil {
-		return err
-	}
-
-	b := backup.New(ctx, cfg)
-	if err := b.Exec(buf); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 //initCfg initialize configs
