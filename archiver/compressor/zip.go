@@ -8,24 +8,28 @@ import (
 	"os"
 	"time"
 
+	"github.com/shinofara/stand/config"
+
 	"golang.org/x/net/context"
 )
 
 type ZipCompressor struct {
 	ctx context.Context
+	cfg *config.Config
 }
 
-func NewZipCompressor(ctx context.Context) *ZipCompressor {
+func NewZipCompressor(ctx context.Context, cfg *config.Config) *ZipCompressor {
 	return &ZipCompressor{
 		ctx: ctx,
+		cfg: cfg,
 	}
 }
 
-func (c *ZipCompressor) Compress(compressedFile io.Writer, targetDir string, files []string) error {
+func (c *ZipCompressor) Compress(compressedFile io.Writer, files []string) error {
 	w := zip.NewWriter(compressedFile)
 
 	for _, filename := range files {
-		filepath := fmt.Sprintf("%s/%s", targetDir, filename)
+		filepath := fmt.Sprintf("%s/%s", c.cfg.Path, filename)
 		info, err := os.Stat(filepath)
 		if err != nil {
 			return err

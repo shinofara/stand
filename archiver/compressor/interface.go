@@ -7,14 +7,14 @@ import (
 )
 
 type Compressor interface {
-	Compress(io.Writer, string, []string) error
+	Compress(io.Writer, []string) error
 }
 
-func New(ctx context.Context, cfg *config.CompressionConfig) Compressor {
-	switch cfg.Format {
+func New(ctx context.Context, cfg *config.Config) Compressor {
+	switch cfg.CompressionConfig.Format {
 	case "tar":
-		return NewTarCompressor(ctx)
+		return NewTarCompressor(ctx, cfg)
 	default:
-		return NewZipCompressor(ctx)
+		return NewZipCompressor(ctx, cfg)
 	}
 }

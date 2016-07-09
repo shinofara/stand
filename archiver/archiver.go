@@ -11,18 +11,15 @@ import (
 )
 
 type Archiver struct {
-	cfg        *config.Config
-	ctx        context.Context
-	compressor compressor.Compressor
+	cfg *config.Config
+	ctx context.Context
 }
 
 func New(ctx context.Context, cfg *config.Config) *Archiver {
-	c := compressor.New(ctx, cfg.CompressionConfig)
 
 	return &Archiver{
-		cfg:        cfg,
-		ctx:        ctx,
-		compressor: c,
+		cfg: cfg,
+		ctx: ctx,
 	}
 }
 
@@ -35,7 +32,8 @@ func (a *Archiver) Archive() (*bytes.Buffer, error) {
 
 	//ZIPファイル作成
 	buf := new(bytes.Buffer)
-	if err := a.compressor.Compress(buf, a.cfg.Path, paths); err != nil {
+	c := compressor.New(a.ctx, a.cfg)
+	if err := c.Compress(buf, paths); err != nil {
 		return nil, err
 	}
 

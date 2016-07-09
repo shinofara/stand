@@ -8,20 +8,25 @@ import (
 	"log"
 	"os"
 
+	"github.com/shinofara/stand/config"
+
 	"golang.org/x/net/context"
 )
 
 type TarCompressor struct {
 	ctx context.Context
+	cfg *config.Config
 }
 
-func NewTarCompressor(ctx context.Context) *TarCompressor {
+func NewTarCompressor(ctx context.Context, cfg *config.Config) *TarCompressor {
 	return &TarCompressor{
 		ctx: ctx,
+
+		cfg: cfg,
 	}
 }
 
-func (c *TarCompressor) Compress(compressedFile io.Writer, targetDir string, files []string) error {
+func (c *TarCompressor) Compress(compressedFile io.Writer, files []string) error {
 
 	gw := gzip.NewWriter(compressedFile)
 	defer gw.Close()
@@ -29,7 +34,7 @@ func (c *TarCompressor) Compress(compressedFile io.Writer, targetDir string, fil
 	tw := tar.NewWriter(gw)
 
 	for _, filename := range files {
-		filepath := fmt.Sprintf("%s/%s", targetDir, filename)
+		filepath := fmt.Sprintf("%s/%s", c.cfg.Path, filename)
 
 		info, err := os.Stat(filepath)
 		if err != nil {

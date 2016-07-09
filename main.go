@@ -16,6 +16,7 @@ var (
 )
 
 func main() {
+
 	ctx := context.WithValue(
 		context.Background(),
 		"logger",
@@ -39,36 +40,8 @@ func initCfg() (*config.Configs, error) {
 	flag.Parse()
 
 	if *flCfgPath == "" {
-		return loadOption()
+		return config.GenerateSimpleConfigs(flag.Arg(0), *flOutputPath), nil
 	}
 
-	return loadCfg(*flCfgPath)
-
-}
-
-func loadCfg(path string) (*config.Configs, error) {
-	cfgs, err := config.Load(path)
-	if err != nil {
-		return nil, err
-	}
-
-	return cfgs, nil
-}
-
-func loadOption() (*config.Configs, error) {
-	cfg := &config.Config{
-		Type: "dir",
-		Path: flag.Arg(0),
-		CompressionConfig: &config.CompressionConfig{
-			Format: "zip",
-		},
-		StorageConfigs: []config.StorageConfig{
-			config.StorageConfig{
-				Type: "local",
-				Path: *flOutputPath,
-			},
-		},
-	}
-
-	return &config.Configs{cfg}, nil
+	return config.Load(*flCfgPath)
 }
