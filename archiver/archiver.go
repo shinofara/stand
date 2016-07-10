@@ -27,7 +27,7 @@ func New(ctx context.Context, cfg *config.Config) *Archiver {
 //Archive generates a buffer of compressed files.
 func (a *Archiver) Archive() (*bytes.Buffer, error) {
 	logger := a.ctx.Value("logger").(zap.Logger)
-	paths, err := find.Find(a.cfg.Path)
+	paths, err := find.Find(a.cfg.Path, true, false)
 	if err != nil {
 		return nil, err
 	}
