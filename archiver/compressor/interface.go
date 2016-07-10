@@ -2,12 +2,13 @@ package compressor
 
 import (
 	"github.com/shinofara/stand/config"
+	"github.com/shinofara/stand/find"
 	"golang.org/x/net/context"
 	"io"
 )
 
 type Compressor interface {
-	Compress(io.Writer, []string) error
+	Compress(io.Writer, []find.File) error
 }
 
 func New(ctx context.Context, cfg *config.Config) Compressor {

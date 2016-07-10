@@ -2,13 +2,12 @@ package compressor
 
 import (
 	"archive/zip"
-	"fmt"
 	"io"
 	"io/ioutil"
-	"os"
 	"time"
 
 	"github.com/shinofara/stand/config"
+	"github.com/shinofara/stand/find"
 
 	"golang.org/x/net/context"
 )
@@ -25,29 +24,26 @@ func NewZipCompressor(ctx context.Context, cfg *config.Config) *ZipCompressor {
 	}
 }
 
-func (c *ZipCompressor) Compress(compressedFile io.Writer, files []string) error {
+func (c *ZipCompressor) Compress(compressedFile io.Writer, files []find.File) error {
 	w := zip.NewWriter(compressedFile)
 
-	for _, filename := range files {
-		filepath := fmt.Sprintf("%s/%s", c.cfg.Path, filename)
-		info, err := os.Stat(filepath)
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
+	for _, f := range files {
+		if f.Info.IsDir() {
 			continue
 		}
 
-		hdr, err := createZipFileHeader(filename, info)
-
-		f, err := w.CreateHeader(hdr)
+		hdr, err := createZipFileHeader(f)
 		if err != nil {
 			return err
 		}
 
-		contents, _ := ioutil.ReadFile(filepath)
-		_, err = f.Write(contents)
+		wf, err := w.CreateHeader(hdr)
+		if err != nil {
+			return err
+		}
+
+		contents, _ := ioutil.ReadFile(f.FullPath)
+		_, err = wf.Write(contents)
 		if err != nil {
 			return err
 		}
@@ -60,13 +56,13 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, files []string) error
 	return nil
 }
 
-func createZipFileHeader(filename string, info os.FileInfo) (*zip.FileHeader, error) {
-	hdr, err := zip.FileInfoHeader(info)
+func createZipFileHeader(f find.File) (*zip.FileHeader, error) {
+	hdr, err := zip.FileInfoHeader(f.Info)
 	if err != nil {
 		return nil, err
 	}
 
-	hdr.Name = filename
+	hdr.Name = f.Path
 
 	local := time.Now().Local()
 
