@@ -1,7 +1,6 @@
 package location
 
 import (
-	"fmt"
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
 	"os"
@@ -37,14 +36,13 @@ func (l *Local) Save(filename string, buf *bytes.Buffer) error {
 }
 
 func (l *Local) Clean() error {
-	files, _ := find.All(l.storageCfg.Path)
-	sort.Sort(sort.Reverse(sort.StringSlice(files)))
+	files, _ := find.Find(l.storageCfg.Path, false, true)
+	sort.Sort(files)
 
 	var num int64 = 0
 	for _, file := range files {
 		if num > l.storageCfg.LifeCyrcle {
-			path := fmt.Sprintf("%s/%s", l.storageCfg.Path, file)
-			if err := os.RemoveAll(path); err != nil {
+			if err := os.RemoveAll(file.FullPath); err != nil {
 				return err
 			}
 		}
