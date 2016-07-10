@@ -6,13 +6,27 @@ import (
 	"path/filepath"
 )
 
-type File struct {
-	Info     os.FileInfo
-	Path     string
-	FullPath string
+type (
+	FindFiles []File
+
+	File struct {
+		Info     os.FileInfo
+		Path     string
+		FullPath string
+	}
+)
+
+func (fi FindFiles) Len() int {
+	return len(fi)
+}
+func (fi FindFiles) Swap(i, j int) {
+	fi[i], fi[j] = fi[j], fi[i]
+}
+func (fi FindFiles) Less(i, j int) bool {
+	return fi[j].Info.ModTime().Unix() < fi[i].Info.ModTime().Unix()
 }
 
-func Find(targetDir string) ([]File, error) {
+func Find(targetDir string, deepMode bool, fileOnlyMode bool) (FindFiles, error) {
 	var paths []File
 	err := filepath.Walk(targetDir,
 		func(path string, info os.FileInfo, err error) error {
@@ -28,6 +42,14 @@ func Find(targetDir string) ([]File, error) {
 			var filePath string
 
 			if info.IsDir() {
+				if rel != "." && !deepMode {
+					return filepath.SkipDir
+				}
+
+				if fileOnlyMode {
+					return nil
+				}
+
 				filePath = fmt.Sprintf("%s/", rel)
 			} else {
 				filePath = rel
