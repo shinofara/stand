@@ -1,79 +1,81 @@
 package find
 
 import (
-	"fmt"
 	"os"
+	"fmt"
 	"path/filepath"
 )
 
-type (
-	FindFiles []File
-
-	File struct {
-		Info     os.FileInfo
-		Path     string
-		FullPath string
-	}
+//mode flgs
+const (
+	DeepSearchMode = true //deep search mode flg
+	NotDeepSearchMode = false //not deep search mode flg
+	FileOnlyMode = true //file only mode flg
+	NotFileOnlyMode = false //not file only mode flg
 )
 
-func (fi FindFiles) Len() int {
-	return len(fi)
-}
-func (fi FindFiles) Swap(i, j int) {
-	fi[i], fi[j] = fi[j], fi[i]
-}
-func (fi FindFiles) Less(i, j int) bool {
-	return fi[j].Info.ModTime().Unix() < fi[i].Info.ModTime().Unix()
+//findCallBack is a middleware function definition to the search results.
+type findCallBack func(path string, file *os.File) error
+
+//Find contains search options
+type Find struct {
+	callback findCallBack
+	deepMode bool
+	fileOnlyMode bool
+	targetDir string
 }
 
-func Find(targetDir string, deepMode bool, fileOnlyMode bool) (FindFiles, error) {
-	var paths []File
-	err := filepath.Walk(targetDir,
+//New creates a new Find
+func New(callback findCallBack, targetDir string, deepMode bool, fileOnlyMode bool) *Find {
+	return &Find{
+		callback: callback,
+		deepMode: deepMode,
+		fileOnlyMode: fileOnlyMode,
+		targetDir: targetDir,
+	}
+}
+
+//Run starts file search
+func (f *Find) Run() error {
+	return filepath.Walk(f.targetDir,
 		func(path string, info os.FileInfo, err error) error {
-			rel, err := filepath.Rel(targetDir, path)
+			rel, err := filepath.Rel(f.targetDir, path)
 			if err != nil {
 				return err
 			}
-
+			
 			if info == nil {
 				return fmt.Errorf("file info is not found")
-			}
-
+				}
+			
 			var filePath string
-
+			
 			if info.IsDir() {
-				if rel != "." && !deepMode {
+				if rel == "." {
+					return nil
+				}
+				
+				if f.deepMode == NotDeepSearchMode {
 					return filepath.SkipDir
 				}
 
-				if fileOnlyMode {
+				if f.fileOnlyMode == FileOnlyMode {
 					return nil
 				}
-
+				
 				filePath = fmt.Sprintf("%s/", rel)
-			} else {
-				filePath = rel
-			}
-
-			fullPath := fmt.Sprintf("%s/%s", targetDir, filePath)
-
-			info, err = os.Stat(fullPath)
-			if err != nil {
+				} else {
+					filePath = rel
+				}
+			
+			fullPath := fmt.Sprintf("%s/%s", f.targetDir, filePath)
+			addFile, _ := os.Open(fullPath)
+			defer addFile.Close()
+			
+			if err := f.callback(filePath, addFile); err != nil {
 				return err
 			}
 
-			fInfo := File{
-				Info:     info,
-				Path:     filePath,
-				FullPath: fullPath}
-
-			paths = append(paths, fInfo)
 			return nil
 		})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return paths, nil
 }
