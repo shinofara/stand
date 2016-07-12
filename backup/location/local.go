@@ -6,7 +6,6 @@ import (
 	"os"
 	"sort"
 	"fmt"
-	"bytes"
 )
 
 type Local struct {
@@ -19,18 +18,21 @@ func NewLocal(storageCfg *config.StorageConfig) *Local {
 	}
 }
 
-func (l *Local) Save(filename string, buf *bytes.Buffer) error {
+func (l *Local) Save(filename string) error {
 	if err := mkdir(l.storageCfg.Path); err != nil {
 		return err
 	}
 
-	storagePath := l.storageCfg.Path + "/" + filename
-	f, err := os.Create(storagePath)
+	//file mv
+	info, err := os.Stat(filename)
 	if err != nil {
 		return err
 	}
-	f.Write(buf.Bytes())
-	f.Close()
+	movePath := l.storageCfg.Path + "/" + info.Name()
+
+	if err := os.Rename(filename, movePath); err != nil {
+		return err
+	}
 
 	return nil
 }
