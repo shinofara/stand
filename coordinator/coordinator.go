@@ -22,14 +22,14 @@ func New(ctx context.Context, cfg *config.Config) *Coordinator {
 
 func (c *Coordinator) Perform() error {
 	a := archiver.New(c.ctx, c.cfg)
-	buf, err := a.Archive()
+	filepath, err := a.Archive()
 
 	if err != nil {
 		return err
 	}
 
 	b := backup.New(c.ctx, c.cfg)
-	if err := b.Exec(buf); err != nil {
+	if err := b.Exec(filepath); err != nil {
 		return err
 	}
 

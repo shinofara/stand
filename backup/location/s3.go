@@ -1,11 +1,11 @@
 package location
 
 import (
-	"bytes"
 	"fmt"
 	"path"
 	"regexp"
 	"sort"
+	"os"
 
 	"github.com/shinofara/stand/config"
 
@@ -41,11 +41,16 @@ func NewS3(storageCfg *config.StorageConfig) *S3 {
 	return s
 }
 
-func (s *S3) Save(filename string, buf *bytes.Buffer) error {
-	_, err := s.cli.PutObject(&s3.PutObjectInput{
+func (s *S3) Save(filename string) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	
+	_, err = s.cli.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
-		Key:    aws.String(s.storageCfg.Path + "/" + filename),
-		Body:   bytes.NewReader(buf.Bytes()),
+		Key:    aws.String(s.storageCfg.Path + "/" + file.Name()),
+		Body:   file,
 	})
 	if err != nil {
 		return err

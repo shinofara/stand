@@ -1,12 +1,11 @@
 package location
 
 import (
-	"bytes"
 	"github.com/shinofara/stand/config"
 )
 
 type Location interface {
-	Save(filename string, buf *bytes.Buffer) error
+	Save(filename string) error
 	Clean() error
 }
 
