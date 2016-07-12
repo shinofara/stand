@@ -12,3 +12,7 @@ vet:
 	@go vet $$(glide novendor)
 test:
 	@go test $$(glide novendor)
+lint:
+	@for pkg in $$(go list ./... | grep -v /vendor/) ; do \
+		golint $$pkg ; \
+	done

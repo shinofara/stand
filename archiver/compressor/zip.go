@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"time"
+	"os"
 
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
@@ -24,15 +25,12 @@ func NewZipCompressor(ctx context.Context, cfg *config.Config) *ZipCompressor {
 	}
 }
 
-func (c *ZipCompressor) Compress(compressedFile io.Writer, files []find.File) error {
+func (c *ZipCompressor) Compress(compressedFile io.Writer) error {
 	w := zip.NewWriter(compressedFile)
+	defer w.Close()
 
-	for _, f := range files {
-		if f.Info.IsDir() {
-			continue
-		}
-
-		hdr, err := createZipFileHeader(f)
+	middeware := func(path string, file *os.File) error {
+		hdr, err := createZipFileHeader(file, path)
 		if err != nil {
 			return err
 		}
@@ -42,27 +40,34 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer, files []find.File) er
 			return err
 		}
 
-		contents, _ := ioutil.ReadFile(f.FullPath)
+		contents, err := ioutil.ReadAll(file)
 		_, err = wf.Write(contents)
 		if err != nil {
 			return err
 		}
+
+		return nil
 	}
 
-	if err := w.Close(); err != nil {
+	f := find.New(middeware, c.cfg.Path, find.DeepSearchMode, find.NotFileOnlyMode)
+	if err := f.Run(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func createZipFileHeader(f find.File) (*zip.FileHeader, error) {
-	hdr, err := zip.FileInfoHeader(f.Info)
+func createZipFileHeader(f *os.File, path string) (*zip.FileHeader, error) {
+	info, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	hdr, err := zip.FileInfoHeader(info)
 	if err != nil {
 		return nil, err
 	}
 
-	hdr.Name = f.Path
+	hdr.Name = path
 
 	local := time.Now().Local()
 

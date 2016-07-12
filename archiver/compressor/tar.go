@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
 
@@ -20,56 +21,53 @@ type TarCompressor struct {
 func NewTarCompressor(ctx context.Context, cfg *config.Config) *TarCompressor {
 	return &TarCompressor{
 		ctx: ctx,
-
 		cfg: cfg,
 	}
 }
 
-func (c *TarCompressor) Compress(compressedFile io.Writer, files []find.File) error {
+func (c *TarCompressor) Compress(compressedFile io.Writer) error {
 
 	gw := gzip.NewWriter(compressedFile)
 	defer gw.Close()
 
 	tw := tar.NewWriter(gw)
+	defer tw.Close()
 
-	for _, f := range files {
-		err := func(f find.File, tw *tar.Writer) error {
-			if f.Info.IsDir() {
-				//dirは不要
-				return nil
-			}
 
-			file, err := os.Open(f.FullPath)
-			if err != nil {
-				return err
-			}
-			defer file.Close()
-
-			hdr, err := tar.FileInfoHeader(f.Info, "")
-			if err != nil {
-				return err
-			}
-
-			hdr.Name = f.Path
-			if err := tw.WriteHeader(hdr); err != nil {
-				return err
-			}
-
-			if _, err = io.Copy(tw, file); err != nil {
-				return err
-			}
-
-			return nil
-		}(f, tw)
-
+	middeware := func(path string, file *os.File) error {
+		info, err := file.Stat()
 		if err != nil {
 			return err
 		}
+				
+		if info.IsDir() {
+			//dirは不要
+			return nil
+		}
+
+		hdr, err := tar.FileInfoHeader(info, "")
+		if err != nil {
+			return err
+		}
+
+		hdr.Name = path
+		if err := tw.WriteHeader(hdr); err != nil {
+			return err
+		}
+
+		if _, err = io.Copy(tw, file); err != nil {
+			return err
+		}
+
+			return nil
 	}
 
-	if err := tw.Close(); err != nil {
+
+	f := find.New(middeware, c.cfg.Path, find.DeepSearchMode, find.NotFileOnlyMode)
+	if err := f.Run(); err != nil {
 		return err
-	}
+	}	
 
 	return nil
+
 }
