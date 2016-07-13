@@ -29,7 +29,7 @@ func main() {
 
 	for _, cfg := range *cfgs {
 		c := coordinator.New(ctx, cfg)
-		if err := c.Perform(); err != nil {
+		if err := c.Run(); err != nil {
 			logger.Fatal(err.Error())
 		}
 	}
