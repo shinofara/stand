@@ -79,3 +79,49 @@ func (f *Find) Run() error {
 			return nil
 		})
 }
+
+
+type FindFiles []File
+type File struct {
+	Info     os.FileInfo
+	Path     string
+	FullPath string
+}
+
+func (fi FindFiles) Len() int {
+	return len(fi)
+}
+func (fi FindFiles) Swap(i, j int) {
+	fi[i], fi[j] = fi[j], fi[i]
+}
+func (fi FindFiles) Less(i, j int) bool {
+	return fi[j].Info.ModTime().Unix() < fi[i].Info.ModTime().Unix()
+}
+
+//findMiddleware is middeware of find.findCallBack interface's
+func GetFiles(dir string) (FindFiles, error) {
+	var files []File
+	middleware := func(path string, file *os.File) error {
+		info, err := file.Stat()
+		if err != nil {
+			return err
+		}
+
+		fullPath := fmt.Sprintf("%s/%s", dir, path)
+	
+		fInfo := File{
+			Info:     info,
+			Path:     path,
+			FullPath: fullPath}
+	
+		files = append(files, fInfo)
+		return nil
+	}
+
+	f := New(middleware, dir, NotDeepSearchMode,FileOnlyMode)
+	if err := f.Run(); err != nil {
+		return nil, err
+	}
+	
+	return files, nil
+}
