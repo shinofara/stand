@@ -5,6 +5,8 @@ dependencies:
 test:
   override:
       - mkdir -p $CIRCLE_TEST_REPORTS/golang
+      - mkdir -p $GOPATH/src/github.com/shinofara
+      - ln -s $HOME/$CIRCLE_PROJECT_REPONAME $GOPATH/src/github.com/shinofara/stand
       - go test -v $(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $CIRCLE_TEST_REPORTS/golang/junit.xml;
       - go vet $(go list ./...|grep -v vendor)
 
