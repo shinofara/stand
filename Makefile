@@ -1,6 +1,6 @@
 NAME=stand
 REPO=github.com/shinofara/${NAME}
-GO_VERSION=1.6.1
+GO_VERSION=1.7rc1
 
 default: build
 
@@ -9,11 +9,11 @@ build: clean
 	sh ../../bin/build.sh
 
 build-on-docker: clean
-	docker run --rm
+	docker run --rm \
 		-w /go/src/$(REPO)/cmd/$(NAME) \
 		-v ${PWD}:/go/src/$(REPO) \
-	golang:$(GO_VERSION)-alpine \
-	sh ../../bin/build.sh
+		golang:$(GO_VERSION)-alpine \
+		sh ../../bin/build.sh
 
 clean:
 	@rm -f stand*
