@@ -8,9 +8,3 @@ test:
   override:
     - mkdir -p $CIRCLE_TEST_REPORTS/golang
     - make circleci-test-all
-
-deployment:
-  release:
-    branch: master
-    commands:
-      - make build-all
