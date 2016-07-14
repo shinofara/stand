@@ -10,6 +10,12 @@ Stand is a tool to perform directory backup and backup's generation management  
 # Installation
 
 ```
+$ curl https://raw.githubusercontent.com/shinofara/stand/master/bin/install.py | python
+```
+
+or
+
+```
 $ go install github.com/shinofara/stand
 ```
 
