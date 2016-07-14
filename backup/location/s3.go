@@ -2,10 +2,11 @@ package location
 
 import (
 	"fmt"
+	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"sort"
-	"os"
 
 	"github.com/shinofara/stand/config"
 
@@ -46,10 +47,11 @@ func (s *S3) Save(filename string) error {
 	if err != nil {
 		return err
 	}
-	
+	defer file.Close()
+
 	_, err = s.cli.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
-		Key:    aws.String(s.storageCfg.Path + "/" + file.Name()),
+		Key:    aws.String(s.makeUploadPath(file)),
 		Body:   file,
 	})
 	if err != nil {
@@ -91,7 +93,6 @@ func (s *S3) findAll() (*s3.ListObjectsOutput, error) {
 	return s.cli.ListObjects(&s3.ListObjectsInput{
 		Bucket: aws.String(s.storageCfg.S3Config.BucketName),
 	})
-
 }
 
 func (s *S3) delete(key string) error {
@@ -107,6 +108,11 @@ func (s *S3) delete(key string) error {
 	return nil
 }
 
+func (s *S3) makeUploadPath(file *os.File) string {
+	_, name := filepath.Split(file.Name())
+	return fmt.Sprintf("%s/%s", s.storageCfg.Path, name)
+}
+
 func replacePattern(str string) string {
 	rep := regexp.MustCompile(`^/`)
 	path := fmt.Sprintf("%s",
@@ -118,5 +124,4 @@ func replacePattern(str string) string {
 	}
 
 	return fmt.Sprintf("%s/*", path)
-
 }
