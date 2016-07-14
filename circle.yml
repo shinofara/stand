@@ -2,7 +2,6 @@ dependencies:
   override:
     - go get -u github.com/jstemmer/go-junit-report
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/shinofara
-    - ln -s $HOME/$CIRCLE_PROJECT_REPONAME /home/ubuntu/.go_workspace/src/github.com/shinofara/stand
 
 test:
   override:
