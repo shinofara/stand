@@ -5,18 +5,57 @@ import (
 	"compress/gzip"
 	"io"
 	"os"
-
+	"fmt"
 
 	"github.com/shinofara/stand/config"
-	"github.com/shinofara/stand/find"
 
 	"golang.org/x/net/context"
 )
 
-type TarCompressor struct {
+type (
+	TarCompressor struct {
 	ctx context.Context
 	cfg *config.Config
+	}
+
+	tarCompression struct {
+		tw *tar.Writer
+	}	
+)
+
+func (c *tarCompression) perform(d string, f string) {
+
+	fw, err := os.Open(fmt.Sprintf("%s/%s", d, f))
+	if err != nil {
+		panic(err)
+	}
+
+	info, err := fw.Stat()
+	if err != nil {
+		fw.Close()
+		panic(err)
+	}
+	defer fw.Close()	
+
+	if info.IsDir() {
+		return 
+	}
+
+	hdr, err := tar.FileInfoHeader(info, "")
+	if err != nil {
+		panic(err)
+	}
+
+	hdr.Name = f
+	if err := c.tw.WriteHeader(hdr); err != nil {
+		panic(err)
+	}
+
+	if _, err = io.Copy(c.tw, fw); err != nil {
+		panic(err)
+	}
 }
+
 
 func NewTarCompressor(ctx context.Context, cfg *config.Config) *TarCompressor {
 	return &TarCompressor{
@@ -25,49 +64,22 @@ func NewTarCompressor(ctx context.Context, cfg *config.Config) *TarCompressor {
 	}
 }
 
-func (c *TarCompressor) Compress(compressedFile io.Writer) error {
+func (c *TarCompressor) Compress(compressedFile io.Writer, files []string) error {
 
 	gw := gzip.NewWriter(compressedFile)
 	defer gw.Close()
 
 	tw := tar.NewWriter(gw)
-	defer tw.Close()
 
-
-	middeware := func(path string, file *os.File) error {
-		info, err := file.Stat()
-		if err != nil {
-			return err
-		}
-				
-		if info.IsDir() {
-			//dirは不要
-			return nil
-		}
-
-		hdr, err := tar.FileInfoHeader(info, "")
-		if err != nil {
-			return err
-		}
-
-		hdr.Name = path
-		if err := tw.WriteHeader(hdr); err != nil {
-			return err
-		}
-
-		if _, err = io.Copy(tw, file); err != nil {
-			return err
-		}
-
-			return nil
+	tc := &tarCompression{
+		tw: tw,
 	}
-
-
-	f := find.New(middeware, c.cfg.Path, find.DeepSearchMode, find.NotFileOnlyMode)
-	if err := f.Run(); err != nil {
-		return err
-	}	
-
+	
+	for _, f := range files {
+		tc.perform(c.cfg.Path, f)		
+	}
+	tw.Close()
+	
 	return nil
 
 }

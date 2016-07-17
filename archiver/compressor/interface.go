@@ -7,7 +7,7 @@ import (
 )
 
 type Compressor interface {
-	Compress(io.Writer) error
+	Compress(io.Writer, []string) error
 }
 
 func New(ctx context.Context, cfg *config.Config) Compressor {

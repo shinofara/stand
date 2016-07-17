@@ -11,7 +11,7 @@ func TestCreateFileHeader(t *testing.T) {
 
 	info, _ := file.Stat()
 
-	zipHeader, _ := createZipFileHeader(file, "test/sample.txt")
+	zipHeader, _ := setFileHeader(info)
 
 	if info.ModTime() == zipHeader.ModTime() {
 		t.Error("Must not be equall")
