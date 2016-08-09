@@ -7,6 +7,7 @@ import (
 
 	"github.com/shinofara/stand/archiver/compressor"
 	"github.com/shinofara/stand/config"
+	"github.com/shinofara/stand/find"	
 
 	"github.com/uber-go/zap"
 	"golang.org/x/net/context"
@@ -21,13 +22,28 @@ type Archiver struct {
 	ctx context.Context
 }
 
-
 func New(ctx context.Context, cfg *config.Config) *Archiver {
 
 	return &Archiver{
 		cfg: cfg,
 		ctx: ctx,
 	}
+}
+
+func findFiles(findPath string) ([]string, error) {
+	var files []string
+
+	middeware := func(path string, file *os.File) error {
+		files = append(files, path)
+		return nil
+	}
+	
+	f := find.New(middeware, findPath, find.DeepSearchMode, find.NotFileOnlyMode)
+	if err := f.Run(); err != nil {
+		return nil, err
+	}
+
+	return files, nil
 }
 
 //Archive generates a buffer of compressed files.
@@ -43,7 +59,12 @@ func (a *Archiver) Archive() (string, error) {
 	
 	c := compressor.New(a.ctx, a.cfg)
 
-	if err := c.Compress(buf); err != nil {
+	files, err := findFiles(a.cfg.Path)
+	if err != nil {
+		return "", err
+	}
+	
+	if err := c.Compress(buf, files); err != nil {
 		return "", err
 	}
 
