@@ -1,16 +1,14 @@
 package compressor
 
 import (
+	"context"
 	"archive/tar"
 	"compress/gzip"
 	"io"
 	"os"
 
-
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
-
-	"golang.org/x/net/context"
 )
 
 type TarCompressor struct {

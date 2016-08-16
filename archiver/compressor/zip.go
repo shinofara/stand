@@ -6,11 +6,10 @@ import (
 	"io/ioutil"
 	"time"
 	"os"
+	"context"
 
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
-
-	"golang.org/x/net/context"
 )
 
 type ZipCompressor struct {

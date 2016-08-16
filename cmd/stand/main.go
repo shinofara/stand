@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
+	
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/coordinator"
 
 	flag "github.com/docker/docker/pkg/mflag"
 	"github.com/uber-go/zap"
-	"golang.org/x/net/context"
 )
 
 var (

@@ -2,7 +2,7 @@ package compressor
 
 import (
 	"github.com/shinofara/stand/config"
-	"golang.org/x/net/context"
+	"context"
 	"io"
 )
 

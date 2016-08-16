@@ -9,7 +9,7 @@ import (
 	"github.com/shinofara/stand/config"
 
 	"github.com/uber-go/zap"
-	"golang.org/x/net/context"
+	"context"
 )
 
 const (
