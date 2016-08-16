@@ -2,11 +2,10 @@ package backup
 
 import (
 	"os"
+	"context"
 	
 	"github.com/shinofara/stand/backup/location"
 	"github.com/shinofara/stand/config"
-
-	"golang.org/x/net/context"
 )
 
 //Backup manages all of the settings for backup

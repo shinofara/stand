@@ -2,9 +2,9 @@ package coordinator
 
 import (
 	"sort"
+	"context"
 
 	"github.com/uber-go/zap"
-	"golang.org/x/net/context"
 
 	"github.com/shinofara/stand/archiver"
 	"github.com/shinofara/stand/backup"
