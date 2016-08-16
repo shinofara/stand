@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"fmt"
+	"io"
 )
 
 type Local struct {
@@ -30,7 +31,7 @@ func (l *Local) Save(filename string) error {
 	}
 	movePath := l.storageCfg.Path + "/" + info.Name()
 
-	if err := os.Rename(filename, movePath); err != nil {
+	if err := copyFile(filename, movePath); err != nil {
 		return err
 	}
 
@@ -125,5 +126,26 @@ func mkdir(path string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func copyFile(srcName string, dstName string) error {
+	src, err := os.Open(srcName)
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	dst, err := os.Create(dstName)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, src)
+	if  err != nil {
+		return err
+	}
+
 	return nil
 }

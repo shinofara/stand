@@ -58,10 +58,6 @@ func (s *S3) Save(filename string) error {
 		return err
 	}
 
-	if err := os.Remove(filename); err != nil {
-		return err
-	}
-
 	return nil
 }
 
