@@ -1,13 +1,13 @@
 machine:
   environment:
-    GOROOT: "/home/ubuntu/go"
     PATH: "/home/ubuntu/go/bin:$PATH"
 
 dependencies:
   cache_directories:
     - "/home/ubuntu/.go"
   pre:
-    - if [[ ! -e /home/ubuntu/.go/$GOERSION/bin/go ]]; then
+    - cd /home/ubuntu;
+      if [[ ! -e /home/ubuntu/.go/$GOERSION/bin/go ]]; then
         curl https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz | tar -xz;
         go get -u github.com/jstemmer/go-junit-report;
         mkdir -p ~/.go;
