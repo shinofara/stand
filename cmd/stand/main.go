@@ -2,17 +2,18 @@ package main
 
 import (
 	"context"
-	
+
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/coordinator"
 
-	flag "github.com/docker/docker/pkg/mflag"
+	"flag"
+
 	"github.com/uber-go/zap"
 )
 
 var (
-	flCfgPath    = flag.String([]string{"c", "-conf"}, "", "path to config yaml")
-	flOutputPath = flag.String([]string{"o", "-out"}, "", "path to output dir")
+	flCfgPath    string
+	flOutputPath string
 	logger       = zap.NewJSON()
 )
 
@@ -38,11 +39,16 @@ func main() {
 
 //initCfg initialize configs
 func initCfg() (*config.Configs, error) {
+	flag.StringVar(&flCfgPath, "c", "", "path to config yaml")
+	flag.StringVar(&flCfgPath, "conf", "", "path to config yaml")
+	flag.StringVar(&flOutputPath, "o", "", "path to output dir")
+	flag.StringVar(&flOutputPath, "out", "", "path to output dir")
+
 	flag.Parse()
 
-	if *flCfgPath == "" {
-		return config.GenerateSimpleConfigs(flag.Arg(0), *flOutputPath), nil
+	if flCfgPath == "" {
+		return config.GenerateSimpleConfigs(flag.Arg(0), flOutputPath), nil
 	}
 
-	return config.Load(*flCfgPath)
+	return config.Load(flCfgPath)
 }
