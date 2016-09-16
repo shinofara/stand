@@ -7,6 +7,7 @@ import (
 	"sort"
 	"fmt"
 	"io"
+	"path/filepath"
 )
 
 type Local struct {
@@ -29,7 +30,7 @@ func (l *Local) Save(filename string) error {
 	if err != nil {
 		return err
 	}
-	movePath := l.storageCfg.Path + "/" + info.Name()
+	movePath := filepath.Join(l.storageCfg.Path, info.Name())
 
 	if err := copyFile(filename, movePath); err != nil {
 		return err
@@ -88,13 +89,13 @@ func (c *Clean) findMiddleware(path string, file *os.File) error {
 		return err
 	}
 
-	fullPath := fmt.Sprintf("%s/%s", c.storageCfg.Path, path)
-	
+	fullPath := filepath.Join(c.storageCfg.Path, path)
+
 	fInfo := File{
 		Info:     info,
 		Path:     path,
 		FullPath: fullPath}
-	
+
 	c.targets = append(c.targets, fInfo)
 	return nil
 }
