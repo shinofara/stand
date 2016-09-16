@@ -12,9 +12,7 @@ import (
 )
 
 var (
-	flCfgPath    string
-	flOutputPath string
-	logger       = zap.NewJSON()
+	logger = zap.NewJSON()
 )
 
 func main() {
@@ -39,6 +37,11 @@ func main() {
 
 //initCfg initialize configs
 func initCfg() (*config.Configs, error) {
+	var (
+		flCfgPath    string
+		flOutputPath string
+	)
+
 	flag.StringVar(&flCfgPath, "c", "", "path to config yaml")
 	flag.StringVar(&flCfgPath, "conf", "", "path to config yaml")
 	flag.StringVar(&flOutputPath, "o", "", "path to output dir")
