@@ -1,9 +1,9 @@
 package backup
 
 import (
-	"os"
 	"context"
-	
+	"os"
+
 	"github.com/shinofara/stand/backup/location"
 	"github.com/shinofara/stand/config"
 )
@@ -41,8 +41,7 @@ func (b *Backup) Exec(filepath string) error {
 
 	if err := os.Remove(filepath); err != nil {
 		return err
-	}	
+	}
 
 	return nil
 }
-

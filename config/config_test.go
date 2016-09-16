@@ -11,7 +11,7 @@ func TestLoad(t *testing.T) {
 			Type: "dir",
 			Path: "/path/to/target/1",
 			StorageConfigs: []StorageConfig{
-				StorageConfig{
+				{
 					Type:       "local",
 					Path:       "/path/to/output/1",
 					LifeCyrcle: 1,
@@ -37,7 +37,7 @@ func TestLoadMulti(t *testing.T) {
 			Type: "dir",
 			Path: "/path/to/target/1",
 			StorageConfigs: []StorageConfig{
-				StorageConfig{
+				{
 					Type:       "local",
 					Path:       "/path/to/output/1",
 					LifeCyrcle: 1,
@@ -52,7 +52,7 @@ func TestLoadMulti(t *testing.T) {
 			Type: "dir",
 			Path: "/path/to/target/2",
 			StorageConfigs: []StorageConfig{
-				StorageConfig{
+				{
 					Type:       "local",
 					Path:       "/path/to/output/2",
 					LifeCyrcle: 2,
@@ -78,7 +78,7 @@ func TestLoadS3(t *testing.T) {
 			Type: "dir",
 			Path: "/path/to/target/1",
 			StorageConfigs: []StorageConfig{
-				StorageConfig{
+				{
 					Type:       "s3",
 					Path:       "/path/to/output/1",
 					LifeCyrcle: 1,

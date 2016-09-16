@@ -1,8 +1,8 @@
 package coordinator
 
 import (
-	"sort"
 	"context"
+	"sort"
 
 	"github.com/uber-go/zap"
 

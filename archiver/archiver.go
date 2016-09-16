@@ -9,8 +9,8 @@ import (
 	"github.com/shinofara/stand/archiver/compressor"
 	"github.com/shinofara/stand/config"
 
-	"github.com/uber-go/zap"
 	"context"
+	"github.com/uber-go/zap"
 )
 
 const (
@@ -21,7 +21,6 @@ type Archiver struct {
 	cfg *config.Config
 	ctx context.Context
 }
-
 
 func New(ctx context.Context, cfg *config.Config) *Archiver {
 
@@ -35,13 +34,13 @@ func New(ctx context.Context, cfg *config.Config) *Archiver {
 func (a *Archiver) Archive() (string, error) {
 	logger := a.ctx.Value("logger").(zap.Logger)
 
-	filepath :=a.makeCompressedFileName()
+	filepath := a.makeCompressedFileName()
 	buf, err := os.Create(filepath)
 	if err != nil {
 		return "", err
 	}
 	defer buf.Close()
-	
+
 	c := compressor.New(a.ctx, a.cfg)
 
 	if err := c.Compress(buf); err != nil {
@@ -53,7 +52,6 @@ func (a *Archiver) Archive() (string, error) {
 		return "", err
 	}
 
-	
 	logger.Info(
 		"Compression has been completed",
 		zap.Int64("size", info.Size()),
@@ -66,7 +64,7 @@ func (a *Archiver) makeCompressedFileName() string {
 	timestamp := time.Now().Format(TimeFormat)
 
 	extention := "zip"
-switch a.cfg.CompressionConfig.Format {
+	switch a.cfg.CompressionConfig.Format {
 	case "tar":
 		extention = "tar.gz"
 	}

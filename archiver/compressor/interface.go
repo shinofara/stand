@@ -1,8 +1,8 @@
 package compressor
 
 import (
-	"github.com/shinofara/stand/config"
 	"context"
+	"github.com/shinofara/stand/config"
 	"io"
 )
 
