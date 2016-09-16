@@ -2,11 +2,11 @@ package compressor
 
 import (
 	"archive/zip"
+	"context"
 	"io"
 	"io/ioutil"
-	"time"
 	"os"
-	"context"
+	"time"
 
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"

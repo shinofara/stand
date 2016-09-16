@@ -78,18 +78,18 @@ func loadMultiConfig(buf []byte) (*Configs, error) {
 
 func GenerateSimpleConfigs(targetDir string, backupDir string) *Configs {
 	cfg := &Config{
-			Type: "dir",
+		Type: "dir",
 		Path: targetDir,
 		CompressionConfig: &CompressionConfig{
 			Format: "zip",
 		},
 		StorageConfigs: []StorageConfig{
-			StorageConfig{
+			{
 				Type: "local",
 				Path: backupDir,
 			},
 		},
 	}
-	
+
 	return &Configs{cfg}
 }

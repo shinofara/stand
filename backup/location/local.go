@@ -1,13 +1,13 @@
 package location
 
 import (
+	"fmt"
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
-	"os"
-	"sort"
-	"fmt"
 	"io"
+	"os"
 	"path/filepath"
+	"sort"
 )
 
 type Local struct {
@@ -58,14 +58,14 @@ func (fi FindFiles) Less(i, j int) bool {
 
 //Clean contains the information about the cleaning.
 type Clean struct {
-	targets FindFiles
-	storageCfg *config.StorageConfig 
+	targets    FindFiles
+	storageCfg *config.StorageConfig
 }
 
 //New creates a new Clean
 func NewCLean(storageCfg *config.StorageConfig) *Clean {
 	return &Clean{
-		storageCfg: storageCfg, 
+		storageCfg: storageCfg,
 	}
 }
 
@@ -144,7 +144,7 @@ func copyFile(srcName string, dstName string) error {
 	defer dst.Close()
 
 	_, err = io.Copy(dst, src)
-	if  err != nil {
+	if err != nil {
 		return err
 	}
 

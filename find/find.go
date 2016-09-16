@@ -1,17 +1,17 @@
 package find
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
 //mode flgs
 const (
-	DeepSearchMode = true //deep search mode flg
+	DeepSearchMode    = true  //deep search mode flg
 	NotDeepSearchMode = false //not deep search mode flg
-	FileOnlyMode = true //file only mode flg
-	NotFileOnlyMode = false //not file only mode flg
+	FileOnlyMode      = true  //file only mode flg
+	NotFileOnlyMode   = false //not file only mode flg
 )
 
 //findCallBack is a middleware function definition to the search results.
@@ -19,19 +19,19 @@ type findCallBack func(path string, file *os.File) error
 
 //Find contains search options
 type Find struct {
-	callback findCallBack
-	deepMode bool
+	callback     findCallBack
+	deepMode     bool
 	fileOnlyMode bool
-	targetDir string
+	targetDir    string
 }
 
 //New creates a new Find
 func New(callback findCallBack, targetDir string, deepMode bool, fileOnlyMode bool) *Find {
 	return &Find{
-		callback: callback,
-		deepMode: deepMode,
+		callback:     callback,
+		deepMode:     deepMode,
 		fileOnlyMode: fileOnlyMode,
-		targetDir: targetDir,
+		targetDir:    targetDir,
 	}
 }
 
@@ -43,18 +43,18 @@ func (f *Find) Run() error {
 			if err != nil {
 				return err
 			}
-			
+
 			if info == nil {
 				return fmt.Errorf("file info is not found")
-				}
-			
+			}
+
 			var filePath string
-			
+
 			if info.IsDir() {
 				if rel == "." {
 					return nil
 				}
-				
+
 				if f.deepMode == NotDeepSearchMode {
 					return filepath.SkipDir
 				}
@@ -79,7 +79,6 @@ func (f *Find) Run() error {
 			return nil
 		})
 }
-
 
 type FindFiles []File
 type File struct {
@@ -113,15 +112,15 @@ func GetFiles(dir string) (FindFiles, error) {
 			Info:     info,
 			Path:     path,
 			FullPath: fullPath}
-	
+
 		files = append(files, fInfo)
 		return nil
 	}
 
-	f := New(middleware, dir, NotDeepSearchMode,FileOnlyMode)
+	f := New(middleware, dir, NotDeepSearchMode, FileOnlyMode)
 	if err := f.Run(); err != nil {
 		return nil, err
 	}
-	
+
 	return files, nil
 }

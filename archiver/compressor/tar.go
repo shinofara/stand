@@ -1,9 +1,9 @@
 package compressor
 
 import (
-	"context"
 	"archive/tar"
 	"compress/gzip"
+	"context"
 	"io"
 	"os"
 
@@ -31,13 +31,12 @@ func (c *TarCompressor) Compress(compressedFile io.Writer) error {
 	tw := tar.NewWriter(gw)
 	defer tw.Close()
 
-
 	middeware := func(path string, file *os.File) error {
 		info, err := file.Stat()
 		if err != nil {
 			return err
 		}
-				
+
 		if info.IsDir() {
 			//dirは不要
 			return nil
@@ -57,14 +56,13 @@ func (c *TarCompressor) Compress(compressedFile io.Writer) error {
 			return err
 		}
 
-			return nil
+		return nil
 	}
-
 
 	f := find.New(middeware, c.cfg.Path, find.DeepSearchMode, find.NotFileOnlyMode)
 	if err := f.Run(); err != nil {
 		return err
-	}	
+	}
 
 	return nil
 
