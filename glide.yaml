@@ -4,8 +4,5 @@ import:
 - package: github.com/aws/aws-sdk-go
   subpackages:
   - /aws
-- package: github.com/docker/docker
-  subpackages:
-  - /pkg/mflag
 - package: github.com/uber-go/zap
   version: 469a1280b2b59c39f5aed25f9b823f00c6fd3e16
