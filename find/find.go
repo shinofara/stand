@@ -62,16 +62,16 @@ func (f *Find) Run() error {
 				if f.fileOnlyMode == FileOnlyMode {
 					return nil
 				}
-				
-				filePath = fmt.Sprintf("%s/", rel)
-				} else {
-					filePath = rel
-				}
-			
-			fullPath := fmt.Sprintf("%s/%s", f.targetDir, filePath)
+
+				filePath = rel + string(os.PathSeparator)
+			} else {
+				filePath = rel
+			}
+
+			fullPath := filepath.Join(f.targetDir, filePath)
 			addFile, _ := os.Open(fullPath)
 			defer addFile.Close()
-			
+
 			if err := f.callback(filePath, addFile); err != nil {
 				return err
 			}
@@ -107,8 +107,8 @@ func GetFiles(dir string) (FindFiles, error) {
 			return err
 		}
 
-		fullPath := fmt.Sprintf("%s/%s", dir, path)
-	
+		fullPath := filepath.Join(dir, path)
+
 		fInfo := File{
 			Info:     info,
 			Path:     path,

@@ -1,9 +1,10 @@
 package archiver
 
 import (
-	"time"
-	"os"
 	"fmt"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/shinofara/stand/archiver/compressor"
 	"github.com/shinofara/stand/config"
@@ -76,6 +77,5 @@ switch a.cfg.CompressionConfig.Format {
 	} else {
 		filename = fmt.Sprintf("%s.%s", timestamp, extention)
 	}
-	return fmt.Sprintf("/tmp/%s", filename)
+	return filepath.Join(os.TempDir(), filename)
 }
-
