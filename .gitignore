@@ -1,2 +1,5 @@
 *.test
 stand*
+vendor
+.glide
+.DS_Store

@@ -1,8 +1,8 @@
 hash: f33b91c68841c4b4222da9b580f87047be3c33b9bea44c582373ad2a797f597f
-updated: 2016-09-17T15:51:53.180427047+09:00
+updated: 2016-09-17T16:37:44.731114151Z
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 49c3892b61af1d4996292a3025f36e4dfa25eaee
+  version: b2dc98bb584e48b0f5f39c93110633173c5da43c
   subpackages:
   - aws
   - aws/awserr
@@ -12,10 +12,13 @@ imports:
   - aws/corehandlers
   - aws/credentials
   - aws/credentials/ec2rolecreds
+  - aws/credentials/endpointcreds
+  - aws/credentials/stscreds
   - aws/defaults
   - aws/ec2metadata
   - aws/request
   - aws/session
+  - aws/signer/v4
   - private/endpoints
   - private/protocol
   - private/protocol/query
@@ -23,17 +26,17 @@ imports:
   - private/protocol/rest
   - private/protocol/restxml
   - private/protocol/xml/xmlutil
-  - private/signer/v4
   - private/waiter
   - service/s3
+  - service/sts
 - name: github.com/go-ini/ini
-  version: afbd495e5aaea13597b5e14fe514ddeaa4d76fc3
+  version: 6e4869b434bd001f6983749881c7ead3545887d8
 - name: github.com/jmespath/go-jmespath
-  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+  version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
 - name: github.com/uber-go/atomic
   version: 0c9e689d64f004564b79d9a663634756df322902
 - name: github.com/uber-go/zap
   version: 469a1280b2b59c39f5aed25f9b823f00c6fd3e16
 - name: gopkg.in/yaml.v2
-  version: bef53efd0c76e49e6de55ead051f886bea7e9420
+  version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
 testImports: []
