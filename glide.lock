@@ -1,44 +1,35 @@
-hash: 1023aff10648a9398e0adda13f9d44726c5c186c7f83bd683c8e3494db51c411
-updated: 2016-08-17T05:41:49.066027563+09:00
+hash: f33b91c68841c4b4222da9b580f87047be3c33b9bea44c582373ad2a797f597f
+updated: 2016-09-17T15:51:53.180427047+09:00
 imports:
 - name: github.com/aws/aws-sdk-go
   version: 49c3892b61af1d4996292a3025f36e4dfa25eaee
   subpackages:
   - aws
-  - aws/credentials
-  - aws/session
-  - service/s3
   - aws/awserr
-  - aws/client
-  - aws/corehandlers
-  - aws/defaults
-  - aws/request
-  - private/endpoints
   - aws/awsutil
+  - aws/client
   - aws/client/metadata
+  - aws/corehandlers
+  - aws/credentials
+  - aws/credentials/ec2rolecreds
+  - aws/defaults
+  - aws/ec2metadata
+  - aws/request
+  - aws/session
+  - private/endpoints
   - private/protocol
+  - private/protocol/query
+  - private/protocol/query/queryutil
+  - private/protocol/rest
   - private/protocol/restxml
+  - private/protocol/xml/xmlutil
   - private/signer/v4
   - private/waiter
-  - aws/credentials/ec2rolecreds
-  - aws/ec2metadata
-  - private/protocol/query
-  - private/protocol/rest
-  - private/protocol/xml/xmlutil
-  - private/protocol/query/queryutil
-- name: github.com/docker/docker
-  version: 4dc5990d7565a4a15d641bc6a0bc50a02cfcf302
-  subpackages:
-  - pkg/mflag
-  - pkg/homedir
+  - service/s3
 - name: github.com/go-ini/ini
   version: afbd495e5aaea13597b5e14fe514ddeaa4d76fc3
 - name: github.com/jmespath/go-jmespath
   version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
-- name: github.com/opencontainers/runc
-  version: ba1568de399395774ad84c2ace65937814c542ed
-  subpackages:
-  - libcontainer/user
 - name: github.com/uber-go/atomic
   version: 0c9e689d64f004564b79d9a663634756df322902
 - name: github.com/uber-go/zap
