@@ -2,21 +2,18 @@ NAME=stand
 REPO=github.com/shinofara/${NAME}
 GO_VERSION=1.7
 
-default: build
+default: clean glide-install
 
 build: clean
 	@cd cmd/$(NAME); \
 	sh ../../bin/build.sh
 
-build-on-docker: clean
+build-on-docker: clean-bin
 	docker run --rm \
 		-w /go/src/$(REPO)/cmd/$(NAME) \
 		-v ${PWD}:/go/src/$(REPO) \
 		golang:$(GO_VERSION) \
 		sh ../../bin/build.sh
-
-clean:
-	@rm -f stand*
 
 vet:
 	@go vet $$(glide novendor)
@@ -35,3 +32,21 @@ circleci-test:
 circleci-vet:
 	cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && \
 	go vet $$(go list ./...|grep -v vendor)
+
+glide-install:
+	docker run --rm \
+	-v ${PWD}:/work \
+	shinofara/docker-glide:0.12.2 install
+
+glide-update:
+	docker run --rm \
+	-v ${PWD}:/work \
+	shinofara/docker-glide:0.12.2 up
+
+clean: clean-bin clean-vendor
+
+clean-bin:
+	@rm -f stand*
+
+clean-vendor:
+	@rm -rf vendor
