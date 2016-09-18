@@ -1,7 +1,6 @@
 package location
 
 import (
-	"fmt"
 	"github.com/shinofara/stand/config"
 	"github.com/shinofara/stand/find"
 	"io"
@@ -76,9 +75,6 @@ func (c *Clean) Run() error {
 		return err
 	}
 
-	for _, file := range c.targets {
-		fmt.Println(file)
-	}
 	return nil
 }
 
@@ -96,19 +92,25 @@ func (c *Clean) findMiddleware(path string, file *os.File) error {
 		Path:     path,
 		FullPath: fullPath}
 
-	c.targets = append(c.targets, fInfo)
+	switch filepath.Ext(path) {
+	case ".zip", ".gz":
+		c.targets = append(c.targets, fInfo)
+	}
+
 	return nil
 }
 
+// Clean cleans the old files.
 func (l *Local) Clean() error {
 	c := NewCLean(l.storageCfg)
 	if err := c.Run(); err != nil {
-		panic(err)
+		return err
 	}
+
 	files := c.targets
 	sort.Sort(files)
 
-	var num int64 = 0
+	num := int64(0)
 	for _, file := range files {
 		if num > l.storageCfg.LifeCyrcle {
 			if err := os.RemoveAll(file.FullPath); err != nil {
