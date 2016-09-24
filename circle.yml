@@ -26,7 +26,5 @@ dependencies:
 
 test:
   override:
-    - go version
-    - echo $GOROOT
     - mkdir -p $CIRCLE_TEST_REPORTS/golang
     - make circleci-test-all
