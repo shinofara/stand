@@ -2,6 +2,7 @@ machine:
   environment:
     PATH: "/home/ubuntu/go/bin:$PATH"
     GOVERSION: 1.7.1
+    GOROOT: "/home/ubuntu/go"
 
 dependencies:
   cache_directories:
