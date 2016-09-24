@@ -18,7 +18,7 @@ build-on-docker: clean-bin
 vet:
 	@go vet $$(glide novendor)
 test:
-	@go test $$(glide novendor)
+	@go test -race -v $$(glide novendor)
 lint:
 	@for pkg in $$(go list ./... | grep -v /vendor/) ; do \
 		golint $$pkg ; \
@@ -27,11 +27,11 @@ lint:
 circleci-test-all: circleci-test circleci-vet
 circleci-test:
 	cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && \
-	go test -race -v $$(go list ./...|grep -v vendor) | go-junit-report set-exit-code=true > $(CIRCLE_TEST_REPORTS)/golang/junit.xml
+	go test -race -v $$(glide novendor) | go-junit-report -set-exit-code=true > $(CIRCLE_TEST_REPORTS)/golang/junit.xml
 
 circleci-vet:
 	cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && \
-	go vet $$(go list ./...|grep -v vendor)
+	go vet $$(glide novendor)
 
 glide-install:
 	docker run --rm \

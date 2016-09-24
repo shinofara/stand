@@ -1,24 +1,28 @@
 machine:
   environment:
     PATH: "/home/ubuntu/go/bin:$PATH"
+    GOVERSION: 1.7.1
+    GOROOT: "/home/ubuntu/go"
 
 dependencies:
   cache_directories:
     - "/home/ubuntu/.go"
   pre:
     - cd /home/ubuntu;
-      if [[ ! -e /home/ubuntu/.go/$GOERSION/bin/go ]]; then
-        curl https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz | tar -xz;
+      if [[ ! -e /home/ubuntu/.go/$GOVERSION/bin/go ]]; then
+        curl https://storage.googleapis.com/golang/go$GOVERSION.linux-amd64.tar.gz | tar -xz;
         go get -u github.com/jstemmer/go-junit-report;
+        go get -u github.com/Masterminds/glide;
         mkdir -p ~/.go;
-        cp -rp ~/go ~/.go/1.7;
+        cp -rp ~/go ~/.go/$GOVERSION;
       else
-        cp -rp ~/.go/1.7 ~/go;
+        cp -rp ~/.go/$GOVERSION ~/go;
       fi
     - go version
   override:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/shinofara
     - ln -sfn $HOME/$CIRCLE_PROJECT_REPONAME /home/ubuntu/.go_workspace/src/github.com/shinofara/stand
+    - cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && glide install
 
 test:
   override:
