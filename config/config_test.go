@@ -8,7 +8,7 @@ import (
 func TestLoad(t *testing.T) {
 	expected := &Configs{
 		&Config{
-			Type: "dir",
+			Type: "dira",
 			Path: "/path/to/target/1",
 			StorageConfigs: []StorageConfig{
 				{
