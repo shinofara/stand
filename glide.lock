@@ -1,6 +1,8 @@
-hash: f33b91c68841c4b4222da9b580f87047be3c33b9bea44c582373ad2a797f597f
-updated: 2016-09-17T16:37:44.731114151Z
+hash: beec3f1da2478f333dbf66b93e186bd7efec7b39e38f7904a5fd79129c9c72fa
+updated: 2016-09-24T15:44:53.369884214+09:00
 imports:
+- name: github.com/alexmullins/zip
+  version: fcc3c52422bb1d64d3e8b645ea768a9031caa3c8
 - name: github.com/aws/aws-sdk-go
   version: b2dc98bb584e48b0f5f39c93110633173c5da43c
   subpackages:
@@ -37,6 +39,10 @@ imports:
   version: 0c9e689d64f004564b79d9a663634756df322902
 - name: github.com/uber-go/zap
   version: 469a1280b2b59c39f5aed25f9b823f00c6fd3e16
+- name: golang.org/x/crypto
+  version: 8e06e8ddd9629eb88639aba897641bff8031f1d3
+  subpackages:
+  - pbkdf2
 - name: gopkg.in/yaml.v2
   version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
 testImports: []
