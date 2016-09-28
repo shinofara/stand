@@ -1,8 +1,20 @@
 package: github.com/shinofara/stand
 import:
+- package: github.com/go-ini/ini
+  version: 6e4869b434bd001f6983749881c7ead3545887d8
+- package: github.com/jmespath/go-jmespath
+  version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+- package: github.com/uber-go/atomic
+  version: 0c9e689d64f004564b79d9a663634756df322902
+- package: github.com/uber-go/zap
+  version: 469a1280b2b59c39f5aed25f9b823f00c6fd3e16
 - package: gopkg.in/yaml.v2
+  version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
 - package: github.com/aws/aws-sdk-go
+  version: b2dc98bb584e48b0f5f39c93110633173c5da43c
   subpackages:
   - /aws
 - package: github.com/uber-go/zap
   version: 469a1280b2b59c39f5aed25f9b823f00c6fd3e16
+- package: github.com/alexmullins/zip
+- package: golang.org/x/crypto/pbkdf2

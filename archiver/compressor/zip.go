@@ -1,7 +1,7 @@
 package compressor
 
 import (
-	"archive/zip"
+	"github.com/alexmullins/zip"
 	"context"
 	"io"
 	"io/ioutil"
@@ -34,10 +34,15 @@ func (c *ZipCompressor) Compress(compressedFile io.Writer) error {
 			return err
 		}
 
+		if c.cfg.CompressionConfig.Password != "" {
+			hdr.SetPassword(c.cfg.CompressionConfig.Password)
+		}
+
 		wf, err := w.CreateHeader(hdr)
 		if err != nil {
 			return err
 		}
+
 
 		contents, err := ioutil.ReadAll(file)
 		_, err = wf.Write(contents)
@@ -67,7 +72,6 @@ func createZipFileHeader(f *os.File, path string) (*zip.FileHeader, error) {
 	}
 
 	hdr.Name = path
-
 	local := time.Now().Local()
 
 	//現時刻のオフセットを取得

@@ -93,6 +93,31 @@ or
         bucket_name: "backup_bucket_name"
 ```
 
+## ADD ZIP PASSWORD
+
+### Support ZIP compression methods
+
+`99 - WinZip AES` Only
+
+### Decrypt command
+
+```
+$ 7z x xxxpx.zip
+Would you like to replace the existing file:
+  Path:     ./a
+  Size:     0 bytes
+  Modified: 2016-09-18 21:21:54
+with the file from archive:
+  Path:     a
+  Size:     0 bytes
+  Modified: 2016-09-18 21:21:54
+
+Enter password (will not be echoed):
+
+$ ls -la a
+```
+
+
 ### Pattern to be set in the environment variable
 
 ```
@@ -112,6 +137,7 @@ v `Majors` . `Minors` . `Patches`
 Patch releases are defined as bug, performance, and security fixes. They do not change or add any public interfaces. They do not change the expected behavior of a given interface. They are meant to correct behavior when it doesn't match the documentation, without also introducing a change that makes seamless upgrades impossible.
 
 ### Minors
+
 
 Minors are the addition and refinements of APIs or subsystems. They do not change APIs or introduce backwards compatible breaking changes. These are mostly completely additive releases.
 
