@@ -13,15 +13,18 @@ import (
 	"github.com/uber-go/zap"
 )
 
+//file const.
 const (
-	TimeFormat = "20060102150405"
+	TimeFormat = "20060102150405" //TimeFormat is prefix of archive file.
 )
 
+//Archiver contains archive configs.
 type Archiver struct {
 	cfg *config.Config
 	ctx context.Context
 }
 
+//New creates a Archiver.
 func New(ctx context.Context, cfg *config.Config) *Archiver {
 
 	return &Archiver{
@@ -60,6 +63,7 @@ func (a *Archiver) Archive() (string, error) {
 	return filepath, nil
 }
 
+//makeCompressedFileName makes a compress file name.
 func (a *Archiver) makeCompressedFileName() string {
 	timestamp := time.Now().Format(TimeFormat)
 
