@@ -29,20 +29,6 @@ circleci-test:
 	cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && \
 	go test -race -v $$(glide novendor) | go-junit-report -set-exit-code=true > $(CIRCLE_TEST_REPORTS)/golang/junit.xml
 
-circleci-vet:
-	cd /home/ubuntu/.go_workspace/src/github.com/shinofara/stand && \
-	go vet $$(glide novendor)
-
-glide-install:
-	docker run --rm \
-	-v ${PWD}:/work \
-	shinofara/docker-glide:0.12.2 install
-
-glide-update:
-	docker run --rm \
-	-v ${PWD}:/work \
-	shinofara/docker-glide:0.12.2 up
-
 clean: clean-bin clean-vendor
 
 clean-bin:
