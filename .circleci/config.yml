@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+    - checkout
+    - run: env
+    - run:
+        command: |
+          go get github.com/jstemmer/go-junit-report
+          mkdir -p /tmp/test-results
+          go test -race -v $(go list ./...) | go-junit-report -set-exit-code=true > /tmp/test-results/junit.xml
+    - store_test_results:
+        path: /tmp/test-results
